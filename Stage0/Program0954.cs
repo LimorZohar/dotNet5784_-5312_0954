@@ -1,7 +1,7 @@
 ﻿namespace Stage0;
 partial class Program
 {
-     static partial void welcome5312();
+    static partial void welcome5312();
     private static void Main(string[] args)
     {
         welcome0954();
@@ -12,6 +12,6 @@ partial class Program
     {
         Console.WriteLine("Please give me your name");
         string? userName = Console.ReadLine();
-        Console.WriteLine("Welcome,{0} to my World!",userName);
+        Console.WriteLine("Welcome,{0} to my World!", userName);
     }
 }
