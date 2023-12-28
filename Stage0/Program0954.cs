@@ -8,7 +8,7 @@ partial class Program
         welcome5312();
     }
 
-    private static void welcome0954()
+    private  static void welcome0954()
     {
         Console.WriteLine("Please give me your name");
         string? userName = Console.ReadLine();
