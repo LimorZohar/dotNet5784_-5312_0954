@@ -1,4 +1,3 @@
-﻿
     /// <summary>
     /// Represents a task entity with various properties.
     /// </summary>
