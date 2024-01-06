@@ -1,5 +1,10 @@
 ﻿
-
+/// <summary>
+/// Dependencies between tasks
+/// </summary>
+/// <param name="Id"></param>
+/// <param name="DependentTask"></param>
+/// <param name="DependsOnTask"></param>
 namespace DO;
 
 public record Dependency
@@ -11,3 +16,4 @@ public record Dependency
 { public Dependency :this(0,0,0) {}
 
 }
+

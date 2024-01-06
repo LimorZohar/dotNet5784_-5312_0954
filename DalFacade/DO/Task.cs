@@ -1,4 +1,4 @@
-    /// <summary>
+﻿    /// <summary>
     /// Represents a task entity with various properties.
     /// </summary>
     /// <param name="Id">Personal unique ID of the task.</param>
@@ -35,7 +35,7 @@ namespace DO
         DateTime? CompleteDate = null,
         string? Deliverables = null,
         string? Remarks = null,
-        int EngineerId
+        int? EngineerId
     )
     {
         public Task() : this(0, "", "", DateTime.null, TimeSpan.null, false, null, DateTime.null, null, null, null, null, null, null, 0) { }
