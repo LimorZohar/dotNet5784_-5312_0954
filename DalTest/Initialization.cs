@@ -26,7 +26,6 @@ public static class Initialization
     private static void createEngineers()
     {
         int min_id = 200000000, max_id = 400000000;  /// Define the range of IDs for new engineers
-
         int _id;
         string _name, _email;
         EngineerExperience _level;
