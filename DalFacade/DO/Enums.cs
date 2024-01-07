@@ -15,3 +15,10 @@ public enum Copmlexity
     Movice,
     Expert
 }
+
+public enum EngineerExperience
+{
+    Expert,
+    Junior,
+    Rookie
+}
