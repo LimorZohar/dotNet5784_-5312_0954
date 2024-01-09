@@ -28,17 +28,21 @@ namespace DO
         DateTime? CreatedAtDate = null,
         TimeSpan? RequiredEffortTime = null,
         bool IsMilestone = false,
-        enum Copmlexity,
+        EngineerExperience Copmlexity = EngineerExperience.Junior,
         DateTime? StartDate = null,
         DateTime? ScheduledDate = null,
         DateTime? DeadlineDate = null,
         DateTime? CompleteDate = null,
         string? Deliverables = null,
         string? Remarks = null,
-        int? EngineerId
+        int? EngineerId = null
     )
     {
-        public Task() : this(0, "", "", DateTime.null, TimeSpan.null, false, null, DateTime.null, null, null, null, null, null, null, 0) { }
+        public Task(int _id) : this(Id:0) { }
+
+        public Task(int _id, string description, string alias, bool milestone, DateTime today, object value1, object value2, object value3, object value4, object value5, object value6, int currentEngineerId, EngineerExperience level) : this(_id)
+        {
+        }
 
         /// <summary>
         /// RegistrationDate - registration date of the current student record
@@ -46,3 +50,5 @@ namespace DO
         public DateTime RegistrationDate => DateTime.Now; // get-only property with a corrected name
     }
 }
+
+

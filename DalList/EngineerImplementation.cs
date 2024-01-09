@@ -18,19 +18,20 @@ public class EngineerImplementation : IEngineer
     {
         if (Read(id) is null)
             throw new Exception($"Engineer with ID={id} does not exist");
-        if (DataSource.Tasks.Find(t => t.EngineerId == id) is not null)
+        if (DataSource.Tasks.Find(t => t?.EngineerId == id) is not null)
             throw new Exception($"Engineer with ID={id} has a task to do");
         DataSource.Engineers.Remove(Read(id));
     }
 
     public Engineer? Read(int id)
     {
-        if (DataSource.Engineers.Exists(e => e.Id == id))
-        {
-            Engineer? engineer = DataSource.Engineers.Find(e => e.Id == id);
-            return engineer;
-        }
-        return null;
+        // 
+        Engineer? engineer = DataSource.Engineers.Find(e => e?.Id == id);
+        //if (engineer == null)
+        //{
+        //    throw new DalNotExistException($"Engineer Id: {id} not exists");
+        //}
+        return engineer;
     }
 
     public List<Engineer> ReadAll()

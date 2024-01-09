@@ -18,5 +18,6 @@ public record Engineer //engineer personal details
     Enum? Level = null
 )
 {
-    public Engineer() : this(0, " ", 0, " ", null) { } // empty ctor for stage 3
+  public Engineer() : this(0, null, 0, null, null) { } // empty ctor
+
 }

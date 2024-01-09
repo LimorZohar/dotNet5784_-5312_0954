@@ -16,14 +16,16 @@ public class DependnecyImplementation : IDependency
 
     public void Delete(int id)
     {
+        //.....
+        DataSource.Dependencies.RemoveAll(x => x?.Id ==id);
         throw new Exception($"Dependency is indelible entity");
     }
 
     public Dependency? Read(int id)
     {
-        if (DataSource.Dependencies.Exists(d => d.Id == id))
+        if (DataSource.Dependencies.Exists(d => d?.Id == id))
         {
-            Dependency? dependency = DataSource.Dependencies.Find(d => d.Id == id);
+            Dependency? dependency = DataSource.Dependencies.Find(d => d?.Id == id);
             return dependency;
         }
         return null;

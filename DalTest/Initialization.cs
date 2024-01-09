@@ -59,7 +59,7 @@ public static class Initialization
 
                     _id = s_rand.Next(min_id, max_id);
                 }
-                while (s_dalEngineer!.Read(_id) != null);
+                while (s_dalEngineer?.Read(_id) != null);
 
                /// Extract details from the tuple
                 _name = _details.Item1;
@@ -68,7 +68,7 @@ public static class Initialization
 
                 // Create a new engineer object and add it to the data store
 
-                Engineer newEngineer = new(_id, _name, _email, _level, s_rand.Next(2000, 9000));
+                Engineer newEngineer = new( _id, _email, s_rand.Next(2000, 9000),_name,_level);
                 s_dalEngineer!.Create(newEngineer);
             }
         }
@@ -90,7 +90,7 @@ public static class Initialization
         
         /// Retrieve a list of all engineers
 
-        List<Engineer?> myEngineers = s_dalEngineer.ReadAll();
+        List<Engineer?> myEngineers = s_dalEngineer!.ReadAll()!;
         int maxEngineer = myEngineers.Count();///Calculate the total number of engineers
 
         // Loop to create 100 tasks
@@ -100,7 +100,7 @@ public static class Initialization
             string _description = "Task " + (i + 1).ToString();
             string _alias = (i + 1).ToString();
             _level = _levels[s_rand.Next(0, 3)];/// Randomly select an engineer experience level
-            int currentEngineerId = myEngineers[s_rand.Next(0, maxEngineer)].Id;/// Randomly select a current engineer ID
+            int currentEngineerId = myEngineers[s_rand.Next(0, maxEngineer)]!.Id;/// Randomly select a current engineer ID
 
             //Year _year = (Year)s_rand.Next((int)Year.FirstYear, (int)Year.ExtraYear + 1);
 
@@ -108,8 +108,9 @@ public static class Initialization
             //    int range = (DateTime.Today - start).Days;
             //    DateTime _bdt = start.AddDays(s_rand.Next(range));
 
+            DO.Task task = new(_id, _description, _alias, _milestone,/* _createAt*/ DateTime.Today,/* _start=*/null!, /*_forecastDate*/ null!, /*_deadline*/ value3: null!, /*_complete*/ value4: null!, /*_deliverables*/ value5: null!,/*_remarks*/ value6: null!, currentEngineerId: currentEngineerId, level: _level);
             /// Create a new task object and add it to the data store
-            Task newTask = new(_id, _description, _alias, _milestone,/* _createAt*/ DateTime.Today,/* _start=*/null, /*_forecastDate*/ null, /*_deadline*/ null, /*_complete*/ null, /*_deliverables*/ null,/*_remarks*/ null, currentEngineerId, _level);
+            DO.Task newTask = task;
             s_dalTask!.Create(newTask);
         }
     }
@@ -119,16 +120,16 @@ public static class Initialization
     private static void createDependencies()
 
     {   /// Retrieve a list of all tasks
-        List<Task?> myTasks = s_dalTask.ReadAll();
-        int maxTask = myTasks.Count(), _dependentTask, _DependsOnTask;///Calculate the total number of tasks
+        List<DO.Task?> myTasks = s_dalTask?.ReadAll()!;
+        int maxTask = myTasks.Count();///Calculate the total number of tasks
         for (int i = 0; i < 250; i++)
         {
-          int _dependentTask = myTasks[s_rand.Next(0, maxTask)].Id;///Randomly select a dependent task ID
-          int _DependsOnTask = myTasks[s_rand.Next(0, maxTask)].Id;/// Randomly select a task to depend on
+            int _ependentTask = myTasks[s_rand.Next(0, maxTask)]!.Id;///Randomly select a dependent task ID
+/// Randomly select a task to depend on
 
             /// Create a new dependency object and add it to the data store
 
-            Dependency neWDependency = new(0, _dependentTask, _DependsOnTask);
+            Dependency neWDependency = new(0, _ependentTask, myTasks[s_rand.Next(0, maxTask)]!.Id);
             s_dalDependency!.Create(neWDependency);
         }
     }

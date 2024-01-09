@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 public class TaskImplementation : ITask
 {
-    public int Create(Task item)
+    public int Create(DO.Task item)
     {
         int id = DataSource.Config.NextTaskId;
-        Task copy = item with { Id = id };
+        DO.Task copy = item with { Id = id };
         DataSource.Tasks.Add(copy);
         return id;
     }
@@ -19,27 +19,25 @@ public class TaskImplementation : ITask
     {
         if (Read(id) is null)
             throw new Exception($"Task with ID={id} does not exist");
-        if (DataSource.Dependencies.Find(d => d.DependsOnTask == id) is not null)
-            DataSource.Tasks.Remove(Read(id));
-        throw new Exception($"Task with ID={id} has a depends task");
+        DataSource.Tasks.RemoveAll(x => x?.Id== id);
     }
 
-    public Task? Read(int id)
+    public DO.Task? Read(int id)
     {
-        if (DataSource.Tasks.Exists(t => t.Id == id))
+        if (DataSource.Tasks.Exists(t => t?.Id == id))
         {
-            Task? task = DataSource.Tasks.Find(t => t.Id == id);
+            DO.Task task = DataSource.Tasks.Find(t => t?.Id == id)!;
             return task;
         }
-        return null;
+        throw new DalNotExistException($"the item with id: {id} not found in DataBase");
     }
 
-    public List<Task> ReadAll()
+    public List<DO.Task> ReadAll()
     {
-        return new List<Task>(DataSource.Tasks!);
+        return new List<DO.Task>((IEnumerable<DO.Task>)DataSource.Tasks!);
     }
 
-    public void Update(Task item)
+    public void Update(DO.Task item)
     {
         if (Read(item.Id) is not null)
             throw new Exception($"Task with ID={item.Id} does not exist");

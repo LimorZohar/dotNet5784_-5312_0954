@@ -13,7 +13,7 @@ public record Dependency
     int DependentTask,
     int DependsOnTask
 )
-{ public Dependency :this(0,0,0) {}
-
+{
+    public Dependency(): this( Id:0,0,0) {}
 }
 
