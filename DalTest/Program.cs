@@ -1,14 +1,22 @@
-﻿using DalApi;
-using Dal;
+﻿using Dal;
+using DalApi;
 using DO;
-
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using System.Security.Cryptography;
+using System.Text;
+using System.Xml.Linq;
 namespace DalTest
 {
     internal class Program
     {
-        private static IDependency? s_dalDependency = new DependnecyImplementation(); //stage 1
-        private static IEngineer? s_dalEngineer = new EngineerImplementation(); //stage 1
-        private static ITask? s_dalTask = new TaskImplementation(); //stage 1
+        //private static IDependency? s_dalDependency = new DependnecyImplementation(); //stage 1
+        //private static IEngineer? s_dalEngineer = new EngineerImplementation(); //stage 1
+        //private static ITask? s_dalTask = new TaskImplementation(); //stage 1
+
+        static readonly IDal s_dal = new DalList(); //stage 2
 
         /// Enums for main menu and submenus
 
@@ -53,9 +61,9 @@ namespace DalTest
                             default: levelEngineer = EngineerExperience.Expert; break;
                         }
                         /// Create and add new engineer
-                        s_dalEngineer = new EngineerImplementation();
-                        Engineer newEngineer = new(idEngineer, emailEngineer, costEngineer, nameEngineer,levelEngineer);
-                        s_dalEngineer!.Create(newEngineer);
+
+                        s_dal.Engineer.Create(new Engineer(idEngineer, nameEngineer, emailEngineer, levelEngineer, costEngineer));
+
                         break;
                     case 2:
                         // Read engineer
@@ -66,15 +74,15 @@ namespace DalTest
 
                         // Check if engineer exists and print details
 
-                        if (s_dalEngineer!.Read(id) is null)
+                        if (s_dal.Engineer!.Read(id) is null)
                             Console.WriteLine("no engineer found");
-                        Console.WriteLine(s_dalEngineer!.Read(id)!.ToString());
+                        Console.WriteLine(s_dal.Engineer!.Read(id)!.ToString());
                         break;
                     case 3:
 
                         // Read all engineers
 
-                        foreach (var engineer in s_dalEngineer!.ReadAll())
+                        foreach (var engineer in s_dal.Engineer!.ReadAll())
                             Console.WriteLine(engineer.ToString());
                         break;
                     case 4:
@@ -86,7 +94,7 @@ namespace DalTest
                         double costEngineerUpdate;
                         Console.WriteLine("Enter id for reading");
                         idEngineerUpdate = int.Parse(Console.ReadLine()!);
-                        Console.WriteLine(s_dalEngineer!.Read(idEngineerUpdate)!.ToString());
+                        Console.WriteLine(s_dal.Engineer!.Read(idEngineerUpdate)!.ToString());
                         Console.WriteLine("Enter details to update");//if null to put the same details
 
                         // Input values for update
@@ -106,8 +114,7 @@ namespace DalTest
                         }
                         // Create and update engineer
 
-                        Engineer newEngineerUpdate = new Engineer(idEngineerUpdate, emailEngineerUpdate, costEngineerUpdate, nameEngineerUpdate,levelEngineerUpdate );
-                        s_dalEngineer!.Update(newEngineerUpdate);
+                        s_dal.Engineer.Update(new Engineer(idEngineerUpdate, nameEngineerUpdate, emailEngineerUpdate, levelEngineerUpdate, costEngineerUpdate));
                         break;
                     case 5:
 
@@ -142,9 +149,7 @@ namespace DalTest
                         int dependentTask, dependsOnTask;
                         dependentTask = int.Parse(Console.ReadLine()!);
                         dependsOnTask = int.Parse(Console.ReadLine()!);
-                        s_dalDependency = new DependnecyImplementation();
-                        Dependency newDependency = new(0, dependentTask, dependsOnTask);
-                        s_dalDependency!.Create(newDependency);
+                        s_dal.Dependency.Create(new Dependency(0, dependentTask, dependsOnTask));
                         break;
                     case 2:
                         // Read dependency
@@ -154,14 +159,14 @@ namespace DalTest
                         id = int.Parse(Console.ReadLine()!);
                         // Check if dependency exists and print details
 
-                        if (s_dalDependency!.Read(id) is null)
+                        if (s_dal.Dependency!.Read(id) is null)
                             Console.WriteLine("no dependency found");
-                        Console.WriteLine(s_dalDependency!.Read(id)!.ToString());
+                        Console.WriteLine(s_dal.Dependency!.Read(id)!.ToString());
                         break;
                     case 3:
                         // Read all dependencies
 
-                        foreach (var dependency in s_dalDependency!.ReadAll())
+                        foreach (var dependency in s_dal.Dependency!.ReadAll())
                             Console.WriteLine(dependency.ToString());
                         break;
                     case 4:
@@ -170,7 +175,7 @@ namespace DalTest
                         int idUpdate, dependentTaskUpdate, dependsOnTaskUpdate;
                         Console.WriteLine("Enter id for reading");
                         idUpdate = int.Parse(Console.ReadLine()!);
-                        Console.WriteLine(s_dalDependency!.Read(idUpdate)!.ToString());
+                        Console.WriteLine(s_dal.Dependency!.Read(idUpdate)!.ToString());
                         Console.WriteLine("Enter details to update");
 
                         // Input values for update
@@ -180,8 +185,8 @@ namespace DalTest
 
                         // Create and update dependency
 
-                        Dependency newDependencyUpdate = new(idUpdate, dependentTaskUpdate, dependsOnTaskUpdate);
-                        s_dalDependency!.Update(newDependencyUpdate);
+                        s_dal.Dependency!.Update(new(idUpdate, dependentTaskUpdate, dependsOnTaskUpdate));
+
                         break;
                     case 5:
 
@@ -190,7 +195,7 @@ namespace DalTest
                         int idDelete;
                         Console.WriteLine("Enter id for deleting");
                         idDelete = int.Parse(Console.ReadLine()!);
-                        s_dalDependency!.Delete(idDelete);
+                        s_dal.Dependency!.Delete(idDelete);
                         break;
                     default: return;
                 }
@@ -238,9 +243,7 @@ namespace DalTest
                             case 3: taskLevel = EngineerExperience.Rookie; break;
                             default: taskLevel = EngineerExperience.Expert; break;
                         }
-                        s_dalTask = new TaskImplementation();
-                        DO.Task newTask = new(0, taskDescription, taskAlias, taskMilestone, taskCreateAt, taskStart, taskForecastDate, taskDeadline, taskComplete, taskDeliverables, taskRemarks, taskEngineerId, taskLevel);
-                        s_dalTask!.Create(newTask);
+                        s_dal.Task.Create(new DO.Task(0, taskDescription, taskAlias, taskMilestone, taskCreateAt, taskStart, taskForecastDate, taskDeadline, taskComplete, taskDeliverables, taskRemarks, taskEngineerId, taskLevel));
                         break;
 
                     // Read task
@@ -249,14 +252,14 @@ namespace DalTest
                         int id;
                         Console.WriteLine("Enter id for reading");
                         id = int.Parse(Console.ReadLine()!);
-                        if (s_dalTask!.Read(id) is null)
+                        if (s_dal.Task!.Read(id) is null)
                             Console.WriteLine("no task found");
-                        Console.WriteLine(s_dalTask!.Read(id)!.ToString());
+                        Console.WriteLine(s_dal.Task!.Read(id)!.ToString());
                         break;
                     // Read all tasks
 
                     case 3:
-                        foreach (var task in s_dalTask!.ReadAll())
+                        foreach (var task in s_dal.Task!.ReadAll())
                             Console.WriteLine(task.ToString());
                         break;
 
@@ -291,8 +294,7 @@ namespace DalTest
                             case 3: taskLevelUpdate = EngineerExperience.Rookie; break;
                             default: taskLevelUpdate = EngineerExperience.Expert; break;
                         }
-                        DO.Task newTaskUpdate = new(idTaskUpdate, taskDescriptionUpdate, taskAliasUpdate, taskMilestoneUpdate, taskCreateAtUpdate, taskStartUpdate, taskForecastDateUpdate, taskDeadlineUpdate, taskCompleteUpdate, taskDeliverablesUpdate, taskRemarksUpdate, taskEngineerIdUpdate, taskLevelUpdate);
-                        s_dalTask!.Update(newTaskUpdate);
+                        s_dal.Task.Update(new(idTaskUpdate, taskDescriptionUpdate, taskAliasUpdate, taskMilestoneUpdate, taskCreateAtUpdate, taskStartUpdate, taskForecastDateUpdate, taskDeadlineUpdate, taskCompleteUpdate, taskDeliverablesUpdate, taskRemarksUpdate, taskEngineerIdUpdate, taskLevelUpdate));
                         break;
 
                     // Delete task
@@ -301,7 +303,7 @@ namespace DalTest
                         int idDelete;
                         Console.WriteLine("Enter id for deleting");
                         idDelete = int.Parse(Console.ReadLine()!);
-                        s_dalTask!.Delete(idDelete);
+                        s_dal.Task!.Delete(idDelete);
                         break;
                     default: return;
                 }
@@ -310,12 +312,10 @@ namespace DalTest
 
         static void Main(string[] args)
         {          
-            // Initialize data access layers
-
             try
             {
-                Initialization.Do(s_dalDependency, s_dalEngineer, s_dalTask);
-
+                // Initialization.Do(s_dalDependency, s_dalEngineer, s_dalTask);//stage 1
+                Initialization.Do(s_dal); //stage 2
                 int chooseEntity;
                 do
                 {               

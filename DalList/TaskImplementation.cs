@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-public class TaskImplementation : ITask
+internal class TaskImplementation : ITask
 {
     public int Create(DO.Task item)
     {
