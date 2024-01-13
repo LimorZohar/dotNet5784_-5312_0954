@@ -62,7 +62,8 @@ namespace DalTest
                         }
                         /// Create and add new engineer
 
-                        s_dal.Engineer.Create(new Engineer(idEngineer, nameEngineer, emailEngineer, levelEngineer, costEngineer));
+                        s_dal.Engineer.Create(new Engineer(Id:idEngineer,Name: nameEngineer,Email: emailEngineer,
+                            Level:levelEngineer,Cost: costEngineer));
 
                         break;
                     case 2:
@@ -114,7 +115,8 @@ namespace DalTest
                         }
                         // Create and update engineer
 
-                        s_dal.Engineer.Update(new Engineer(idEngineerUpdate, nameEngineerUpdate, emailEngineerUpdate, levelEngineerUpdate, costEngineerUpdate));
+                        s_dal.Engineer.Update(new Engineer(Id:idEngineerUpdate,Name: nameEngineerUpdate,
+                            Email:emailEngineerUpdate,Level: levelEngineerUpdate,Cost: costEngineerUpdate));
                         break;
                     case 5:
 
@@ -123,7 +125,7 @@ namespace DalTest
                         int idDelete;
                         Console.WriteLine("Enter id for deleting");
                         idDelete = int.Parse(Console.ReadLine()!);
-                        s_dalEngineer!.Delete(idDelete);
+                        s_dal.Engineer!.Delete(idDelete);
                         break;
                     default: return;
                 }
@@ -217,33 +219,46 @@ namespace DalTest
                 {
                     case 1:
                         // Create task
-
-                        Console.WriteLine("Enter  description, alias,deriverables, remarks,milestone, dates and task's level");
-                        int taskEngineerId, currentTaskNum;
-                        string taskDescription, taskAlias, taskDeliverables, taskRemarks;
-                        bool taskMilestone;
-                        DateTime taskCreateAt, taskStart, taskForecastDate, taskDeadline, taskComplete;
-                        EngineerExperience taskLevel;
-                        taskMilestone = bool.Parse(Console.ReadLine()!);
+                        Console.WriteLine("Enter Task id:");
+                        int Tid = Console.Read();
+                        Console.WriteLine("Enter  TaskId");
+                        int taskEngineerId = 0;
                         taskEngineerId = int.Parse(Console.ReadLine()!);
-                        taskDescription = Console.ReadLine()!;
-                        taskAlias = Console.ReadLine()!;
-                        taskDeliverables = Console.ReadLine()!;
-                        taskRemarks = Console.ReadLine()!;
-                        taskCreateAt = DateTime.Parse(Console.ReadLine()!);
-                        taskStart = DateTime.Parse(Console.ReadLine()!);
-                        taskForecastDate = DateTime.Parse(Console.ReadLine()!);
-                        taskDeadline = DateTime.Parse(Console.ReadLine()!);
-                        taskComplete = DateTime.Parse(Console.ReadLine()!);
+                        Console.WriteLine("Enter alias");
+                        string? taskAlias = Console.ReadLine()!;
+                        Console.WriteLine("Enter  description");
+                        string? taskDescription = Console.ReadLine()!;
+                        Console.WriteLine("Enter deriverables");
+                        string? taskDeliverables = Console.ReadLine()!;
+                        Console.WriteLine("Enter  remarks");
+                        string? taskRemarks = Console.ReadLine()!;
+                        Console.WriteLine("Enter milestone");
+                        bool taskMilestone;
+                        taskMilestone = bool.Parse(Console.ReadLine()!);
+                        // Console.WriteLine("Enter dates");
+                        Console.WriteLine("Enter  task's num days");
+                        int currentTaskNum =0;
                         currentTaskNum = int.Parse(Console.ReadLine()!);
-                        switch (currentTaskNum)
+
+                        //DateTime taskCreateAt, taskStart, taskForecastDate, taskDeadline, taskComplete;
+                        //taskCreateAt = DateTime.Parse(Console.ReadLine()!);
+                        //taskStart = DateTime.Parse(Console.ReadLine()!);
+                        //taskForecastDate = DateTime.Parse(Console.ReadLine()!);
+                        //taskDeadline = DateTime.Parse(Console.ReadLine()!);
+                        //taskComplete = DateTime.Parse(Console.ReadLine()!);
+                        Console.WriteLine("Enter  task's level from 1-3");
+                        EngineerExperience taskLevel;
+                        taskLevel = EngineerExperience.Expert;
+                        int num=int.Parse(Console.ReadLine()!);
+                       DateTime newT= DateTime.Now;
+                        switch (num)
                         {
                             case 1: taskLevel = EngineerExperience.Expert; break;
                             case 2: taskLevel = EngineerExperience.Junior; break;
                             case 3: taskLevel = EngineerExperience.Rookie; break;
                             default: taskLevel = EngineerExperience.Expert; break;
                         }
-                        s_dal.Task.Create(new DO.Task(0, taskDescription, taskAlias, taskMilestone, taskCreateAt, taskStart, taskForecastDate, taskDeadline, taskComplete, taskDeliverables, taskRemarks, taskEngineerId, taskLevel));
+                        s_dal.Task.Create(new DO.Task(Id: taskEngineerId, Alias: taskAlias, Description: taskDescription, CreatedAtDate: null, RequiredEffortTime: null, taskMilestone, Copmlexity: taskLevel, StartDate: null, ScheduledDate: null, DeadlineDate: null, CompleteDate:null, Deliverables: taskDeliverables, Remarks: taskRemarks));
                         break;
 
                     // Read task
@@ -273,7 +288,7 @@ namespace DalTest
                         EngineerExperience taskLevelUpdate;
                         Console.WriteLine("Enter id for reading");
                         idTaskUpdate = int.Parse(Console.ReadLine()!);
-                        Console.WriteLine(s_dalTask!.Read(idTaskUpdate)!.ToString());
+                        Console.WriteLine(s_dal.Task!.Read(idTaskUpdate)!.ToString());
                         Console.WriteLine("Enter details to update");//if null to put the same details
                         taskMilestoneUpdate = bool.Parse(Console.ReadLine()!);
                         taskEngineerIdUpdate = int.Parse(Console.ReadLine()!);

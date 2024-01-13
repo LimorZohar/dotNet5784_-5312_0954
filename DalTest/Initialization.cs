@@ -10,7 +10,7 @@ public static class Initialization
     //private static IDependency? s_dalDependency; //stage 1
     //private static IEngineer? s_dalEngineer; //stage 1
     //private static ITask? s_dalTask; //stage 1
-    private static IDal? dal; //stage 2
+    private static IDal? s_dal; //stage 2
 
     private static readonly Random s_rand = new();
     /// Define the range of IDs for new engineers
@@ -64,23 +64,23 @@ public static class Initialization
 
                     _id = s_rand.Next(MIN_ID, MAX_ID);
                 }
-                while (s_dalEngineer?.Read(_id) != null);
+                while (s_dal!.Engineer.Read(_id) != null);
 
-               /// Extract details from the tuple
+                /// Extract details from the tuple
                 _name = _details.Item1;
                 _email = _details.Item2;
                 _level = _levels[s_rand.Next(0, 3)];
 
                 // Create a new engineer object and add it to the data store
 
-                Engineer newEngineer = new( _id, _email, s_rand.Next(2000, 9000),_name,_level);
+                Engineer newEngineer = new(_id, _email, s_rand.Next(2000, 9000), _name, _level);
                 //s_dalEngineer!.Create(newEngineer); //stage 1
                 s_dal!.Engineer.Create(newEngineer); //stage 2
             }
         }
 
     }
-    
+
     /// Method to create a set of tasks
 
     private static void createTasks()
@@ -93,8 +93,8 @@ public static class Initialization
 
         int _id = 0;/// Variable to store the task ID
         bool _milestone = false;/// Variable indicating whether the task is a milestone
-        
-        /// Retrieve a list of all engineers
+
+                                /// Retrieve a list of all engineers
 
         List<Engineer?> myEngineers = s_dal!.Engineer.ReadAll();
         int maxEngineer = myEngineers.Count();///Calculate the total number of engineers
@@ -133,9 +133,9 @@ public static class Initialization
         for (int i = 0; i < 250; i++)
         {
             int _ependentTask = myTasks[s_rand.Next(0, maxTask)]!.Id;///Randomly select a dependent task ID
-            /// Randomly select a task to depend on
+                                                                     /// Randomly select a task to depend on
 
-            /// Create a new dependency object and add it to the data store
+                                                                     /// Create a new dependency object and add it to the data store
 
             Dependency neWDependency = new(0, _ependentTask, myTasks[s_rand.Next(0, maxTask)]!.Id);
             //s_dalDependency!.Create(neWDependency);//stage 1
@@ -143,3 +143,5 @@ public static class Initialization
 
         }
     }
+
+}
