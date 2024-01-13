@@ -133,4 +133,3 @@ public static class Initialization
             s_dalDependency!.Create(neWDependency);
         }
     }
-}
