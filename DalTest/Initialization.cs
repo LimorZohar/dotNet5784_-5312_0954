@@ -7,17 +7,23 @@ using System.Threading.Tasks;
 
 public static class Initialization
 {
-    private static IDependency? s_dalDependency; //stage 1
-    private static IEngineer? s_dalEngineer; //stage 1
-    private static ITask? s_dalTask; //stage 1
+    //private static IDependency? s_dalDependency; //stage 1
+    //private static IEngineer? s_dalEngineer; //stage 1
+    //private static ITask? s_dalTask; //stage 1
+    private static IDal? dal; //stage 2
 
     private static readonly Random s_rand = new();
+    /// Define the range of IDs for new engineers
+    private const int MIN_ID = 200000000;
+    private const int MAX_ID = 400000000;
 
-    public static void Do(IDependency? _s_dalDependency, IEngineer? _s_dalEngineer, ITask? _s_dalTask)
+    //public static void Do(IDependency? _s_dalDependency, IEngineer? _s_dalEngineer, ITask? _s_dalTask)
+    public static void Do(IDal dal) //stage 2
     {   ///Placing all parameters into access variables
-        s_dalDependency = _s_dalDependency ?? throw new NullReferenceException("DAL can not be null!");
-        s_dalEngineer = _s_dalEngineer ?? throw new NullReferenceException("DAL can not be null!");
-        s_dalTask = _s_dalTask ?? throw new NullReferenceException("DAL can not be null!");
+        //s_dalDependency = _s_dalDependency ?? throw new NullReferenceException("DAL can not be null!");
+        //s_dalEngineer = _s_dalEngineer ?? throw new NullReferenceException("DAL can not be null!");
+        //s_dalTask = _s_dalTask ?? throw new NullReferenceException("DAL can not be null!");
+        s_dal = dal ?? throw new NullReferenceException("DAL object can not be null!"); //stage 2
         createEngineers();
         createTasks();
         createDependencies();
@@ -25,7 +31,6 @@ public static class Initialization
 
     private static void createEngineers()
     {
-        int min_id = 200000000, max_id = 400000000;  /// Define the range of IDs for new engineers
         int _id;
         string _name, _email;
         EngineerExperience _level;
@@ -57,7 +62,7 @@ public static class Initialization
                 do
                 {/// Generate a unique ID within the specified range
 
-                    _id = s_rand.Next(min_id, max_id);
+                    _id = s_rand.Next(MIN_ID, MAX_ID);
                 }
                 while (s_dalEngineer?.Read(_id) != null);
 
@@ -69,7 +74,8 @@ public static class Initialization
                 // Create a new engineer object and add it to the data store
 
                 Engineer newEngineer = new( _id, _email, s_rand.Next(2000, 9000),_name,_level);
-                s_dalEngineer!.Create(newEngineer);
+                //s_dalEngineer!.Create(newEngineer); //stage 1
+                s_dal!.Engineer.Create(newEngineer); //stage 2
             }
         }
 
@@ -90,7 +96,7 @@ public static class Initialization
         
         /// Retrieve a list of all engineers
 
-        List<Engineer?> myEngineers = s_dalEngineer!.ReadAll()!;
+        List<Engineer?> myEngineers = s_dal!.Engineer.ReadAll();
         int maxEngineer = myEngineers.Count();///Calculate the total number of engineers
 
         // Loop to create 100 tasks
@@ -111,7 +117,9 @@ public static class Initialization
             DO.Task task = new(_id, _description, _alias, _milestone,/* _createAt*/ DateTime.Today,/* _start=*/null!, /*_forecastDate*/ null!, /*_deadline*/ value3: null!, /*_complete*/ value4: null!, /*_deliverables*/ value5: null!,/*_remarks*/ value6: null!, currentEngineerId: currentEngineerId, level: _level);
             /// Create a new task object and add it to the data store
             DO.Task newTask = task;
-            s_dalTask!.Create(newTask);
+            //s_dalTask!.Create(newTask);//stage 1
+            s_dal!.Task.Create(newTask);//stage 2
+
         }
     }
 
@@ -120,16 +128,18 @@ public static class Initialization
     private static void createDependencies()
 
     {   /// Retrieve a list of all tasks
-        List<DO.Task?> myTasks = s_dalTask?.ReadAll()!;
+        List<DO.Task?> myTasks = s_dal!.Task.ReadAll();
         int maxTask = myTasks.Count();///Calculate the total number of tasks
         for (int i = 0; i < 250; i++)
         {
             int _ependentTask = myTasks[s_rand.Next(0, maxTask)]!.Id;///Randomly select a dependent task ID
-/// Randomly select a task to depend on
+            /// Randomly select a task to depend on
 
             /// Create a new dependency object and add it to the data store
 
             Dependency neWDependency = new(0, _ependentTask, myTasks[s_rand.Next(0, maxTask)]!.Id);
-            s_dalDependency!.Create(neWDependency);
+            //s_dalDependency!.Create(neWDependency);//stage 1
+            s_dal!.Dependency.Create(neWDependency);//stage 2
+
         }
     }
