@@ -3,7 +3,6 @@ using DalApi;
 using DO;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 
 public static class Initialization
 {
@@ -64,7 +63,7 @@ public static class Initialization
 
                     _id = s_rand.Next(MIN_ID, MAX_ID);
                 }
-                while (s_dal!.Engineer.Read(_id) != null);
+                while (s_dal!.Engineer.Read(e => e.Id == _id) is not null);
 
                 /// Extract details from the tuple
                 _name = _details.Item1;
@@ -96,7 +95,7 @@ public static class Initialization
 
                                 /// Retrieve a list of all engineers
 
-        List<Engineer?> myEngineers = s_dal!.Engineer.ReadAll();
+        IEnumerable<Engineer?> myEngineers = s_dal!.Engineer.ReadAll();
         int maxEngineer = myEngineers.Count();///Calculate the total number of engineers
 
         // Loop to create 100 tasks
@@ -106,7 +105,8 @@ public static class Initialization
             string _description = "Task " + (i + 1).ToString();
             string _alias = (i + 1).ToString();
             _level = _levels[s_rand.Next(0, 3)];/// Randomly select an engineer experience level
-            int currentEngineerId = myEngineers[s_rand.Next(0, maxEngineer)]!.Id;/// Randomly select a current engineer ID
+            var nonNullEngineers = myEngineers.Where(e => e != null).ToList();
+            int currentEngineerId = nonNullEngineers[s_rand.Next(0, nonNullEngineers.Count)]!.Id;
 
             //Year _year = (Year)s_rand.Next((int)Year.FirstYear, (int)Year.ExtraYear + 1);
 
@@ -128,16 +128,18 @@ public static class Initialization
     private static void createDependencies()
 
     {   /// Retrieve a list of all tasks
-        List<DO.Task?> myTasks = s_dal!.Task.ReadAll();
-        int maxTask = myTasks.Count();///Calculate the total number of tasks
+        IEnumerable<Task?> myTasks = s_dal!.Task.ReadAll();
+        int maxTask = myTasks.Count(), _dependentTask, _DependsOnTask; ;///Calculate the total number of tasks
         for (int i = 0; i < 250; i++)
         {
-            int _ependentTask = myTasks[s_rand.Next(0, maxTask)]!.Id;///Randomly select a dependent task ID
-                                                                     /// Randomly select a task to depend on
+            //int _ependentTask = myTasks[s_rand.Next(0, maxTask)]!.Id;///Randomly select a dependent task ID
+            //                                                         /// Randomly select a task to depend on
 
-                                                                     /// Create a new dependency object and add it to the data store
-
-            Dependency neWDependency = new(0, _ependentTask, myTasks[s_rand.Next(0, maxTask)]!.Id);
+            //                                                         /// Create a new dependency object and add it to the data store
+            var nonNullTasks = myTasks.Where(e => e != null).ToList();
+            _dependentTask = nonNullTasks[s_rand.Next(0, nonNullTasks.Count)]!.Id;
+            _DependsOnTask = nonNullTasks[s_rand.Next(0, nonNullTasks.Count)]!.Id;
+            Dependency neWDependency = new(0, _dependentTask, _DependsOnTask);
             //s_dalDependency!.Create(neWDependency);//stage 1
             s_dal!.Dependency.Create(neWDependency);//stage 2
 

@@ -75,16 +75,16 @@ namespace DalTest
 
                         // Check if engineer exists and print details
 
-                        if (s_dal.Engineer!.Read(id) is null)
+                        if (s_dal.Engineer!.Read(e => e.Id == id) is null)
                             Console.WriteLine("no engineer found");
-                        Console.WriteLine(s_dal.Engineer!.Read(id)!.ToString());
+                        Console.WriteLine(s_dal.Engineer!.Read(e => e.Id == id)!.ToString());
                         break;
                     case 3:
 
                         // Read all engineers
 
                         foreach (var engineer in s_dal.Engineer!.ReadAll())
-                            Console.WriteLine(engineer.ToString());
+                            Console.WriteLine(engineer?.ToString());
                         break;
                     case 4:
                         // Update engineer
@@ -95,7 +95,7 @@ namespace DalTest
                         double costEngineerUpdate;
                         Console.WriteLine("Enter id for reading");
                         idEngineerUpdate = int.Parse(Console.ReadLine()!);
-                        Console.WriteLine(s_dal.Engineer!.Read(idEngineerUpdate)!.ToString());
+                        Console.WriteLine(s_dal.Engineer!.Read(e => e.Id == idEngineerUpdate).ToString());
                         Console.WriteLine("Enter details to update");//if null to put the same details
 
                         // Input values for update
@@ -161,15 +161,15 @@ namespace DalTest
                         id = int.Parse(Console.ReadLine()!);
                         // Check if dependency exists and print details
 
-                        if (s_dal.Dependency!.Read(id) is null)
+                        if (s_dal.Dependency!.Read(e => e.Id == id) is null)
                             Console.WriteLine("no dependency found");
-                        Console.WriteLine(s_dal.Dependency!.Read(id)!.ToString());
+                        Console.WriteLine(s_dal.Dependency!.Read(e => e.Id == id)!.ToString());
                         break;
                     case 3:
                         // Read all dependencies
 
                         foreach (var dependency in s_dal.Dependency!.ReadAll())
-                            Console.WriteLine(dependency.ToString());
+                            Console.WriteLine(dependency!.ToString());
                         break;
                     case 4:
                         // Update dependency
@@ -177,7 +177,7 @@ namespace DalTest
                         int idUpdate, dependentTaskUpdate, dependsOnTaskUpdate;
                         Console.WriteLine("Enter id for reading");
                         idUpdate = int.Parse(Console.ReadLine()!);
-                        Console.WriteLine(s_dal.Dependency!.Read(idUpdate)!.ToString());
+                        Console.WriteLine(s_dal.Dependency!.Read(d => d.Id == idUpdate)!.ToString());
                         Console.WriteLine("Enter details to update");
 
                         // Input values for update
@@ -267,9 +267,9 @@ namespace DalTest
                         int id;
                         Console.WriteLine("Enter id for reading");
                         id = int.Parse(Console.ReadLine()!);
-                        if (s_dal.Task!.Read(id) is null)
+                        if (s_dal.Task!.Read(e => e.Id == id) is null)
                             Console.WriteLine("no task found");
-                        Console.WriteLine(s_dal.Task!.Read(id)!.ToString());
+                        Console.WriteLine(s_dal.Task!.Read(e => e.Id == id)!.ToString());
                         break;
                     // Read all tasks
 

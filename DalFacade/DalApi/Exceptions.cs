@@ -1,35 +1,16 @@
-﻿using System.Runtime.Serialization;
-
-namespace DalApi
+﻿namespace DO;
+[Serializable]
+public class DalDoesNotExistException : Exception
 {
-    [Serializable]
-    public class DalNotExistException : Exception
-    {
-            public DalNotExistException(string? message) : base(message)
-        {
-        }
+    public DalDoesNotExistException(string? message) : base(message) { }
+}
 
-        public DalNotExistException(string? message, Exception? innerException) : base(message, innerException)
-        {
-        }
+public class DalAlreadyExistsException : Exception
+{
+    public DalAlreadyExistsException(string? message) : base(message) { }
+}
 
-        protected DalNotExistException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
-    }
-    public class DalAlreadytExistException : Exception
-    {
-        public DalAlreadytExistException(string? message) : base(message)
-        {
-        }
-
-        public DalAlreadytExistException(string? message, Exception? innerException) : base(message, innerException)
-        {
-        }
-
-        protected DalAlreadytExistException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
-    }
-
+public class DalDeletionImpossible : Exception
+{
+    public DalDeletionImpossible(string? message) : base(message) { }
 }
