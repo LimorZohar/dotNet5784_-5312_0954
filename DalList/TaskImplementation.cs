@@ -1,29 +1,26 @@
 namespace Dal;
 using DalApi;
 using DO;
-using System;
 using System.Collections.Generic;
-//using System.Threading.Tasks;
-using System.ComponentModel;
-using System.Linq;
+using static DataSource;
 
 internal class TaskImplementation : ITask
 {
     public int Create(DO.Task item)
     {
-        int id = DataSource.Config.NextTaskId;
+        int id = Config.NextTaskId;
         DO.Task copy = item with { Id = id };
-        DataSource.Tasks.Add(copy);
+        Tasks.Add(copy);
         return id;
     }
 
-    public void Delete(int id)
-    {
-        var taskToDelete = Read(t => t.Id == id);
-        if (taskToDelete is null)
-            throw new Exception($"Task with ID={id} does not exist");
-        DataSource.Tasks.RemoveAll(x => x?.Id== id);
-    }
+    public void Delete(int id) => Tasks.RemoveAll(x => x!.Id == id);
+    //{
+    //    var taskToDelete = Read(t => t.Id == id);
+    //    if (taskToDelete is null)
+    //        throw new Exception($"Task with ID={id} does not exist");
+    //    DataSource.Tasks.RemoveAll(x => x?.Id== id);
+    //}
 
     //public DO.Task? Read(int id)
     //{
@@ -34,15 +31,15 @@ internal class TaskImplementation : ITask
     //    }
     //    throw new DalNotExistException($"the item with id: {id} not found in DataBase");
     //}
-    public Task? Read(Func<Task, bool> filter)
-    {
-        return DataSource.Tasks.FirstOrDefault(filter!);
-    }
 
-    public IEnumerable<Task?> ReadAll(Func<Task, bool>? filter = null)
-    {
-        return filter == null ? DataSource.Tasks.Select(item => item) : DataSource.Tasks.Where(filter!);
-    }
+    public Task? Read(Func<Task, bool> filter = null!) => Tasks.FirstOrDefault(x => x!.Equals(filter));
+
+    public DO.Task? Read(int id) => Tasks.FirstOrDefault(x => x!.Id == id);
+
+    public IEnumerable<Task?> ReadAll(Func<Task, bool>? filter = null) =>
+
+        filter == null ? DataSource.Tasks.Select(item => item) : DataSource.Tasks.Where(filter!);
+
     //public Task? Read(Func<Task, bool> filter)
     //{
 
@@ -65,10 +62,17 @@ internal class TaskImplementation : ITask
 
     public void Update(DO.Task item)
     {
-        var existingTask = Read(t => t.Id == item.Id);
-        if (existingTask is null)
-            throw new Exception($"Task with ID={item.Id} does not exist");
-        Delete(item.Id);
-        DataSource.Tasks.Add(item);
+        int index = Engineers.FindIndex(x => x!.Id == item.Id);
+
+        if (index == -1)
+            throw new DalDoesNotExistException($"Task with ID={item.Id} does not exist");
+
+        Tasks[index] = item;
+
+        //var existingTask = Read(t => t.Id == item.Id);
+        //if (existingTask is null)
+        //    throw new Exception($"Task with ID={item.Id} does not exist");
+        //Delete(item.Id);
+        //DataSource.Tasks.Add(item);
     }
 }

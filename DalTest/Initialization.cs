@@ -63,7 +63,7 @@ public static class Initialization
 
                     _id = s_rand.Next(MIN_ID, MAX_ID);
                 }
-                while (s_dal!.Engineer.Read(e => e.Id == _id) is not null);
+                while (s_dal!.Engineer.Read(_id) is not null);
 
                 /// Extract details from the tuple
                 _name = _details.Item1;
