@@ -16,8 +16,8 @@ namespace DalTest
         //private static IEngineer? s_dalEngineer = new EngineerImplementation(); //stage 1
         //private static ITask? s_dalTask = new TaskImplementation(); //stage 1
 
-        static readonly IDal s_dal = new DalList(); //stage 2
-
+        ///static readonly IDal s_dal = new DalList(); //stage 2
+        static readonly IDal s_dal = new DalXml(); //stage 3
         /// Enums for main menu and submenus
 
         enum MainMenu { EXIT, DEPENDENCY, ENGINEER, TASK }
