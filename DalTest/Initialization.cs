@@ -6,9 +6,7 @@ using System.Runtime.CompilerServices;
 
 public static class Initialization
 {
-    //private static IDependency? s_dalDependency; //stage 1
-    //private static IEngineer? s_dalEngineer; //stage 1
-    //private static ITask? s_dalTask; //stage 1
+    
     private static IDal? s_dal; //stage 2
 
     private static readonly Random s_rand = new();
@@ -18,10 +16,7 @@ public static class Initialization
 
     //public static void Do(IDependency? _s_dalDependency, IEngineer? _s_dalEngineer, ITask? _s_dalTask)
     public static void Do(IDal dal) //stage 2
-    {   ///Placing all parameters into access variables
-        //s_dalDependency = _s_dalDependency ?? throw new NullReferenceException("DAL can not be null!");
-        //s_dalEngineer = _s_dalEngineer ?? throw new NullReferenceException("DAL can not be null!");
-        //s_dalTask = _s_dalTask ?? throw new NullReferenceException("DAL can not be null!");
+    {   
         s_dal = dal ?? throw new NullReferenceException("DAL object can not be null!"); //stage 2
         createEngineers();
         createTasks();

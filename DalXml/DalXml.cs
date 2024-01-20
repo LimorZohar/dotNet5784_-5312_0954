@@ -5,14 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dal
+namespace Dal;
+
+public sealed class DalXml : IDal
 {
-    public sealed class DalXml : IDal
-    {
-        public IDependency Dependency =>  new DependencyImplementation();
+    public IDependency Dependency =>  new DependencyImplementation();
 
-        public IEngineer Engineer =>  new EngineerImplementation();
+    public IEngineer Engineer =>  new EngineerImplementation();
 
-        public ITask Task =>  new TaskImplementation();
-    }
+    public ITask Task =>  new TaskImplementation();
 }
