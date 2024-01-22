@@ -316,7 +316,7 @@ namespace DalTest
                 Console.Write("Would you like to create Initial data? (Y/N)"); // stage 3
                 string? ans = Console.ReadLine() ?? throw new FormatException("Wrong input"); // stage 3
 
-                if (ans == "Y") // stage 3 - Convert the input to uppercase for case-insensitivity
+                if (ans.ToUpper() == "Y") // stage 3 - Convert the input to uppercase for case-insensitivity
                 {
                     var engineers = s_dal.Engineer.ReadAll();
                     var tasks = s_dal.Task.ReadAll();
