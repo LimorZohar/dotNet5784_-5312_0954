@@ -15,15 +15,20 @@ internal class TaskImplementation : ITask
     }
 
     public void Delete(int id) => Tasks.RemoveAll(x => x!.Id == id);
- 
+
 
     public Task? Read(Func<Task, bool> filter = null!) => Tasks.FirstOrDefault(x => x!.Equals(filter));
 
     public DO.Task? Read(int id) => Tasks.FirstOrDefault(x => x!.Id == id);
 
-    public IEnumerable<Task?> ReadAll(Func<Task, bool>? filter = null) =>
+    public IEnumerable<Task> ReadAll(Func<Task, bool>? filter = null) =>
 
-        filter == null ? DataSource.Tasks.Select(item => item) : DataSource.Tasks.Where(filter!);
+        (filter == null)
+        ? from item in DataSource.Tasks
+          select item
+        : from item in DataSource.Tasks
+          where filter(item)
+          select item;
 
 
     public void Update(DO.Task item)

@@ -24,11 +24,11 @@ internal class DependnecyImplementation : IDependency
 
     public Dependency? Read(int id) => Dependencies.FirstOrDefault(x => x!.Id == id);
 
-    public IEnumerable<Dependency?> ReadAll(Func<Dependency, bool>? filter = null)
+    public IEnumerable<Dependency> ReadAll(Func<Dependency, bool>? filter = null)
     {
         if (filter is null)
-            return Dependencies.Select(e => e);
-        return Dependencies.Where(filter!);
+            return Dependencies.Select(e => e)!;
+        return Dependencies.Where(filter!)!;
         // return new List<Dependency>(DataSource.Dependencies!);
     }
 

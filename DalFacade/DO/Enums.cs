@@ -1,7 +1,7 @@
 ﻿
 
 namespace DO;
-public enum Level
+public enum Expertise
 {
     Beginner,
     AdvancedBeginner,
@@ -9,16 +9,16 @@ public enum Level
     Advanced,
     Expert
 }
-public enum Copmlexity
+public enum TComplexity
 {
+    Novice,
     Competent,
-    Movice,
     Expert
 }
 
-public enum EngineerExperience
-{
-    Expert,
-    Junior,
-    Rookie
-}
+//public enum EngineerExperience
+//{
+//    Expert,
+//    Junior,
+//    Rookie
+//}

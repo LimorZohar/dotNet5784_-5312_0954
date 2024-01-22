@@ -5,18 +5,19 @@ using System.Linq;
 using System.Xml.Linq;
 using static XMLTools;
 
+
 internal class EngineerImplementation : IEngineer
 {
-    readonly string s_Engineer_xml = "students";
-  
-        public int Create(Engineer item)
+    readonly string s_Engineer_xml = "enginners";
+
+    public int Create(Engineer item)
     {
-            XElement engineerXML = new XElement("Enginner",
-            new XElement("Id", item.Id),
-            new XElement("Email", item.Email),
-            new XElement("Cost", item.Cost),
-            new XElement("Name", item.Name),
-            new XElement("Level", item.Level));
+        XElement engineerXML = new XElement("Enginner",
+        new XElement("Id", item.Id),
+        new XElement("Email", item.Email),
+        new XElement("Cost", item.Cost),
+        new XElement("Name", item.Name),
+        new XElement("Level", item.Level));
 
 
         return item.Id;
@@ -35,16 +36,24 @@ internal class EngineerImplementation : IEngineer
         SaveListToXMLSerializer<Engineer>(engineers, s_Engineer_xml);
     }
 
-    public Engineer? Read(int id)=>
-                LoadListFromXMLSerializer<Engineer>(s_Engineer_xml).FirstOrDefault(x => x.Id == id);
+    public Engineer? Read(int id)
+    {
+       XElement? engineerElem = XMLTools.LoadListFromXMLElement(s_Engineer_xml).Elements().FirstOrDefault(st=> (int?)st.Element("Id")==id);
+        return engineerElem == null ? null : GetEngineer(engineerElem); 
+    }
+    public Engineer? Read(Func<Engineer, bool> filter = null!)
+    {
+       return XMLTools.LoadListFromXMLElement(s_Engineer_xml).Elements().Select(st =>GetEngineer(st)).FirstOrDefault(filter);
+    }
 
+    public IEnumerable<Engineer> ReadAll(Func<Engineer, bool> filter = null!)
+    {
+        if (filter == null)
+            return XMLTools.LoadListFromXMLElement(s_Engineer_xml).Elements().Select(st => GetEngineer(st));
+        else
+            return XMLTools.LoadListFromXMLElement(s_Engineer_xml).Elements().Select(st => GetEngineer(st)).Where(filter);
 
-    public Engineer? Read(Func<Engineer, bool> filter = null)=>
-                LoadListFromXMLSerializer<Engineer>(s_Engineer_xml).FirstOrDefault(filter);
-
-
-    public IEnumerable<Engineer?> ReadAll(Func<Engineer, bool> filter = null)=>
-         LoadListFromXMLSerializer<Engineer>(s_Engineer_xml).Where(filter);
+    }
 
     public void Update(Engineer item)
     {
@@ -52,7 +61,7 @@ internal class EngineerImplementation : IEngineer
         XElement engineersXML = LoadListFromXMLElement(s_Engineer_xml);
 
         // Find the index of the Engineer element with the specified id
-        int index = engineersXML.Elements("Engineer").ToList().FindIndex(e => e.Element("Id").Value == item.Id.ToString());
+        int index = engineersXML.Elements("Engineer").ToList().FindIndex(e => e.Element("Id")!.Value == item.Id.ToString());
 
         // Update the Engineer element at the specified index
         engineersXML.Elements("Engineer").ElementAt(index).ReplaceWith(

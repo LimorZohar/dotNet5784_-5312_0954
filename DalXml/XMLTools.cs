@@ -35,7 +35,7 @@ static class XMLTools
         return nextId;
     }
     #endregion
-
+  
     #region SaveLoadWithXElement
     public static void SaveListToXMLElement(XElement rootElem, string entity)
     {
@@ -97,4 +97,17 @@ static class XMLTools
         }
     }
     #endregion
+
+    
+    public static Engineer GetEngineer(XElement e)
+    {
+        return new Engineer()
+        {
+            Id = e.ToIntNullable("Id") ?? throw new FormatException("can't convert id"),
+            Email = (string?)e.Element("Email") ?? "",
+            Cost = (double?)e.Element("Cost") ?? null,
+            Name = (string?)e.Element("Name") ?? "",
+            Level = e.ToEnumNullable<Expertise>("Level") ?? throw new FormatException("can't convert level"),
+        };
+    }
 }

@@ -4,7 +4,7 @@ using DO;
 using static XMLTools;
 internal class DependencyImplementation : IDependency
 {
-    readonly string s_Dependency_xml = "students";
+    readonly string s_Dependency_xml = "dependencys";
 
     public int Create(Dependency item)
     {
@@ -31,10 +31,10 @@ internal class DependencyImplementation : IDependency
     public Dependency? Read(int id) =>
         LoadListFromXMLSerializer<Dependency>(s_Dependency_xml).FirstOrDefault(x => x.Id == id);
 
-    public Dependency? Read(Func<Dependency, bool> filter = null) =>
+    public Dependency? Read(Func<Dependency, bool> filter = null!) =>
         LoadListFromXMLSerializer<Dependency>(s_Dependency_xml).FirstOrDefault(filter);
 
-    public IEnumerable<Dependency?> ReadAll(Func<Dependency, bool> filter = null) =>
+    public IEnumerable<Dependency> ReadAll(Func<Dependency, bool> filter = null!) =>
         LoadListFromXMLSerializer<Dependency>(s_Dependency_xml).Where(filter);
 
     public void Update(Dependency item)

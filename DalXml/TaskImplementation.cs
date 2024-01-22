@@ -7,16 +7,21 @@ using static XMLTools;
 
 internal class TaskImplementation : ITask
 {
-    readonly string s_Task_xml = "students";
+    readonly string s_Task_xml = "tasks";
 
     public int Create(DO.Task item)
     {
         var tasks = LoadListFromXMLSerializer<Task>(s_Task_xml);
 
-        Task copy = item with { Id = item.Id };
+        int id = Config.GetNextTaskId;
+
+        Task copy = item with { Id = id };
+
         tasks.Add(copy);
+
         SaveListToXMLSerializer<Task>(tasks, s_Task_xml);
-        return copy.Id;
+
+        return id;
     }
 
     public void Delete(int id)
@@ -37,12 +42,14 @@ internal class TaskImplementation : ITask
          LoadListFromXMLSerializer<Task>(s_Task_xml).FirstOrDefault(x => x.Id == id);
     
 
-    public DO.Task? Read(Func<DO.Task, bool> filter = null)=>
+    public DO.Task? Read(Func<DO.Task, bool> filter = null!)=>
           LoadListFromXMLSerializer<Task>(s_Task_xml).FirstOrDefault(filter);
 
 
-    public IEnumerable<DO.Task?> ReadAll(Func<DO.Task, bool> filter = null)=>
-                LoadListFromXMLSerializer<Task>(s_Task_xml).Where(filter);
+    public IEnumerable<DO.Task> ReadAll(Func<DO.Task, bool> filter = null!) =>
+        (filter != null)
+               ? LoadListFromXMLSerializer<Task>(s_Task_xml).Where(filter).ToList()
+               : LoadListFromXMLSerializer<Task>(s_Task_xml).ToList();
 
 
 

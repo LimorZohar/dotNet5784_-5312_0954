@@ -27,11 +27,8 @@ public static class Initialization
     {
         int _id;
         string _name, _email;
-        EngineerExperience _level;
-        EngineerExperience[] _levels = new EngineerExperience[3];
-        _levels[0] = EngineerExperience.Expert;
-        _levels[1] = EngineerExperience.Rookie;
-        _levels[2] = EngineerExperience.Junior;
+        Expertise _level;
+       
 
         // Details for sample engineers
         (string, string)[] EngineersDetails =
@@ -63,11 +60,11 @@ public static class Initialization
                 /// Extract details from the tuple
                 _name = _details.Item1;
                 _email = _details.Item2;
-                _level = _levels[s_rand.Next(0, 3)];
+                _level = (Expertise)s_rand.Next(0, 4);
 
                 // Create a new engineer object and add it to the data store
 
-                Engineer newEngineer = new(_id, _email, s_rand.Next(2000, 9000), _name, _level);
+                Engineer newEngineer = new(_id, _email, s_rand.Next(2000, 9000), _name, (Expertise)_level);
                 //s_dalEngineer!.Create(newEngineer); //stage 1
                 s_dal!.Engineer.Create(newEngineer); //stage 2
             }
@@ -79,19 +76,12 @@ public static class Initialization
 
     private static void createTasks()
     {
-        EngineerExperience _level;/// Variable to store the experience level of an engineer
-        EngineerExperience[] _levels = new EngineerExperience[3];/// Array to hold engineer experience levels
-        _levels[0] = EngineerExperience.Expert;
-        _levels[1] = EngineerExperience.Rookie;
-        _levels[2] = EngineerExperience.Junior;
+        TComplexity _level = TComplexity.Novice;/// Variable to store the experience level of an engineer
 
-        int _id = 0;/// Variable to store the task ID
-        bool _milestone = false;/// Variable indicating whether the task is a milestone
 
-                                /// Retrieve a list of all engineers
-
+         // Retrieve a list of all engineers
         IEnumerable<Engineer?> myEngineers = s_dal!.Engineer.ReadAll();
-        int maxEngineer = myEngineers.Count();///Calculate the total number of engineers
+
 
         // Loop to create 100 tasks
 
@@ -99,22 +89,22 @@ public static class Initialization
         {
             string _description = "Task " + (i + 1).ToString();
             string _alias = (i + 1).ToString();
-            _level = _levels[s_rand.Next(0, 3)];/// Randomly select an engineer experience level
+           
+            _level =(TComplexity)s_rand.Next((int)TComplexity.Novice, (int)TComplexity.Expert); /// Randomly select an engineer experience level
+           
             var nonNullEngineers = myEngineers.Where(e => e != null).ToList();
-            int currentEngineerId = nonNullEngineers[s_rand.Next(0, nonNullEngineers.Count)]!.Id;
 
-            //Year _year = (Year)s_rand.Next((int)Year.FirstYear, (int)Year.ExtraYear + 1);
+            int currentEngineerId = s_rand.Next(0, nonNullEngineers.Count);
 
-            //    DateTime start = new DateTime(1995, 1, 1);
-            //    int range = (DateTime.Today - start).Days;
-            //    DateTime _bdt = start.AddDays(s_rand.Next(range));
+            DO.Task task = new Task 
+            {
+                Description = _description,
+                Alias = _alias ,
+                Complexity = _level ,
+                EngineerId = currentEngineerId,
+            };
 
-            DO.Task task = new(_id, _description, _alias, _milestone,/* _createAt*/ DateTime.Today,/* _start=*/null!, /*_forecastDate*/ null!, /*_deadline*/ value3: null!, /*_complete*/ value4: null!, /*_deliverables*/ value5: null!,/*_remarks*/ value6: null!, currentEngineerId: currentEngineerId, level: _level);
-            /// Create a new task object and add it to the data store
-            DO.Task newTask = task;
-            //s_dalTask!.Create(newTask);//stage 1
-            s_dal!.Task.Create(newTask);//stage 2
-
+            s_dal!.Task.Create(task);//stage 2
         }
     }
 

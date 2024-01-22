@@ -28,7 +28,7 @@ namespace DO
         DateTime? CreatedAtDate = null,
         TimeSpan? RequiredEffortTime = null,
         bool IsMilestone = false,
-        EngineerExperience Copmlexity = EngineerExperience.Junior,
+        TComplexity Complexity = TComplexity.Novice,
         DateTime? StartDate = null,
         DateTime? ScheduledDate = null,
         DateTime? DeadlineDate = null,
@@ -38,11 +38,7 @@ namespace DO
         int? EngineerId = null
     )
     {
-        public Task(int _id) : this(Id:0) { }
-
-        public Task(int _id, string description, string alias, bool milestone, DateTime today, object value1, object value2, object value3, object value4, object value5, object value6, int currentEngineerId, EngineerExperience level) : this(_id)
-        {
-        }
+        public Task() : this (Id: 0) { CreatedAtDate = DateTime.Now; }
 
         /// <summary>
         /// RegistrationDate - registration date of the current student record

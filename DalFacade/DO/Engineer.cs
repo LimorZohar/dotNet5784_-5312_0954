@@ -15,7 +15,7 @@ public record Engineer //engineer personal details
     string? Email = null,
     double? Cost = null,
     string? Name = null,
-    Enum? Level = null
+    Expertise? Level = null
 )
 {
   public Engineer() : this(0, null, 0, null, null) { } // empty ctor

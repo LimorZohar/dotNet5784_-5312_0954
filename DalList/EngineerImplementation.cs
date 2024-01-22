@@ -9,7 +9,7 @@ internal class EngineerImplementation : IEngineer
     public int Create(Engineer item)
     {
         int id = item.Id;
-        if (Engineers.Any(e => e.Id == id))
+        if (Engineers.Any(e => e!.Id == id))
             throw new DalAlreadyExistsException($"Engineer with ID={item.Id} already exists");
         Engineers.Add(item);
         return item.Id;
@@ -19,13 +19,13 @@ internal class EngineerImplementation : IEngineer
 
     public Engineer? Read(Func<Engineer, bool> filter = null!) => Engineers.FirstOrDefault(x => x!.Equals(filter));
 
-    public Engineer? Read(int id) => Engineers.FirstOrDefault(x => x.Id == id);
+    public Engineer? Read(int id) => Engineers.FirstOrDefault(x => x!.Id == id);
 
-    public IEnumerable<Engineer?> ReadAll(Func<Engineer, bool>? filter = null)
+    public IEnumerable<Engineer> ReadAll(Func<Engineer, bool>? filter = null)
     {
         if (filter is null)
-            return Engineers.Select(e => e);
-        return Engineers.Where(filter!);
+            return Engineers.Select(e => e)!;
+        return Engineers.Where(filter!)!;
 
     }
     public void Update(Engineer item)
