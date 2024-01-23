@@ -8,18 +8,17 @@ using static XMLTools;
 
 internal class EngineerImplementation : IEngineer
 {
-    readonly string s_Engineer_xml = "enginners";
+    readonly string s_Engineer_xml = "engineers";
 
     public int Create(Engineer item)
     {
         try
         {
             // Ensure unique ID for the new engineer
-            item.Id = GetAndIncreaseNextId(s_Engineer_xml, "NextId");
-
+            int id = Config.NextLinkId;
             // Create the XML element for the engineer
             XElement engineerXML = new XElement("Engineer",
-                new XElement("Id", item.Id),
+                new XElement("Id", id),
                 new XElement("Email", item.Email),
                 new XElement("Cost", item.Cost),
                 new XElement("Name", item.Name),
@@ -35,7 +34,7 @@ internal class EngineerImplementation : IEngineer
             // Save the updated Engineers XML
             SaveListToXMLElement(engineersXML, s_Engineer_xml);
 
-            return item.Id;
+            return id;
         }
         catch (Exception ex)
         {
@@ -43,6 +42,7 @@ internal class EngineerImplementation : IEngineer
             throw new DalXMLFileLoadCreateException("Failed to create engineer in XML: " + ex.Message);
         }
     }
+
 
     //public int Create(Engineer item)
     //{
