@@ -18,7 +18,7 @@ internal class EngineerImplementation : IEngineer
             item.Id = GetAndIncreaseNextId(s_Engineer_xml, "NextId");
 
             // Create the XML element for the engineer
-            XElement engineerXML = new XElement("Engineer",
+            XElement engineerXML = new XElement("Engineer"
                 new XElement("Id", item.Id),
                 new XElement("Email", item.Email),
                 new XElement("Cost", item.Cost),
