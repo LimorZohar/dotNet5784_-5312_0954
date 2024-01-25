@@ -23,7 +23,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "xml", "xml", "{231C0568-A15
 		xml\data-config.xml = xml\data-config.xml
 		xml\dependencys.xml = xml\dependencys.xml
 		xml\tasks.xml = xml\tasks.xml
-		xml\enginners.xml = xml\enginners.xml
+		xml\engineers.xml = xml\engineers.xml
 	EndProjectSection
 EndProject
 Global
