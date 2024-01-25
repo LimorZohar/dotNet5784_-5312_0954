@@ -10,11 +10,11 @@ using System.Text;
 using System.Xml.Linq;
 namespace DalTest
 {
-   
+
     internal class Program
     {
-       static readonly IDal s_dal = new DalList(); //stage 2
-       // static readonly IDal s_dal = new DalXml(); //stage 3
+        // static readonly IDal s_dal = new DalList(); //stage 2
+        static readonly IDal s_dal = new DalXml(); //stage 3
         // Enums for main menu and submenus
 
         enum MainMenu { EXIT, DEPENDENCY, ENGINEER, TASK }
@@ -316,66 +316,69 @@ namespace DalTest
                 Console.Write("Would you like to create Initial data? (Y/N)"); // stage 3
                 string? ans = Console.ReadLine() ?? throw new FormatException("Wrong input"); // stage 3
 
+
                 if (ans.ToUpper() == "Y") // stage 3 - Convert the input to uppercase for case-insensitivity
                 {
-                    var engineers = s_dal.Engineer.ReadAll();
-                    var tasks = s_dal.Task.ReadAll();
-                    var dependency = s_dal.Dependency.ReadAll();
+                    Initialization.Do(s_dal);
+                    //    var engineers = s_dal.Engineer.ReadAll();
+                    //    var tasks = s_dal.Task.ReadAll();
+                    //    var dependency = s_dal.Dependency.ReadAll();
 
-                    foreach (var en in engineers)
-                    {
-                        s_dal.Engineer.Delete(en.Id);
-                    }
+                    //    foreach (var en in engineers)
+                    //    {
+                    //        s_dal.Engineer.Delete(en.Id);
+                    //    }
 
-                    foreach (var ts in tasks)
-                    {
-                        s_dal.Task.Delete(ts.Id);
-                    }
+                    //    foreach (var ts in tasks)
+                    //    {
+                    //        s_dal.Task.Delete(ts.Id);
+                    //    }
 
-                    foreach (var de in dependency)
-                    {
-                        s_dal.Dependency.Delete(de.Id);
-                    }
+                    //    foreach (var de in dependency)
+                    //    {
+                    //        s_dal.Dependency.Delete(de.Id);
+                    //    }
 
-                    try
-                    {
-                        Initialization.Do(s_dal); // stage 2
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex);
-                    }
+                    //    try
+                    //    {
+                    //        Initialization.Do(s_dal); // stage 2
+                    //    }
+                    //    catch (Exception ex)
+                    //    {
+                    //        Console.WriteLine(ex);
+                    //    }
 
-                int chooseEntity;
+                    //int chooseEntity;
 
-                    do
-                    {
-                        // Display main menu options to the user
-                        Console.WriteLine("enum MainMenu { EXIT, DEPENDENCY, ENGINEER, TASK }");
+                    //    do
+                    //    {
+                    //        // Display main menu options to the user
+                    //        Console.WriteLine("enum MainMenu { EXIT, DEPENDENCY, ENGINEER, TASK }");
 
-                        // Validate user input to ensure it's a valid integer
-                        while (!int.TryParse(Console.ReadLine(), out chooseEntity))
-                        {
-                            Console.WriteLine("Invalid input. Please enter a number.");
-                        }
+                    //        // Validate user input to ensure it's a valid integer
+                    //        while (!int.TryParse(Console.ReadLine(), out chooseEntity))
+                    //        {
+                    //            Console.WriteLine("Invalid input. Please enter a number.");
+                    //        }
 
-                        // Switch based on the user's choice of entity
-                        switch (chooseEntity)
-                        {
-                            case 1:
-                                // Invoke DependencyMenu for CRUD operations on dependencies
-                                DependencyMenu();
-                                break;
-                            case 2:
-                                // Invoke EngineerMenu for CRUD operations on engineers
-                                EngineerMenu();
-                                break;
-                            case 3:
-                                // Invoke TaskMenu for CRUD operations on tasks
-                                TaskMenu();
-                                break;
-                        }
-                    } while (chooseEntity > 0 && chooseEntity < 4);
+                    //        // Switch based on the user's choice of entity
+                    //        switch (chooseEntity)
+                    //        {
+                    //            case 1:
+                    //                // Invoke DependencyMenu for CRUD operations on dependencies
+                    //                DependencyMenu();
+                    //                break;
+                    //            case 2:
+                    //                // Invoke EngineerMenu for CRUD operations on engineers
+                    //                EngineerMenu();
+                    //                break;
+                    //            case 3:
+                    //                // Invoke TaskMenu for CRUD operations on tasks
+                    //                TaskMenu();
+                    //                break;
+                    //        }
+                    //    } while (chooseEntity > 0 && chooseEntity < 4);
+                    //}
                 }
             }
             catch (Exception ex)
@@ -383,6 +386,7 @@ namespace DalTest
                 // Handle exceptions by printing the exception details to the console
                 Console.WriteLine(ex);
             }
+
         }
 
     }

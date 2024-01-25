@@ -2,6 +2,7 @@
 using DalApi;
 using DO;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Xml.Linq;
 using static XMLTools;
 
@@ -12,38 +13,51 @@ internal class EngineerImplementation : IEngineer
 
     public int Create(Engineer item)
     {
-        try
-        {
-            // Ensure unique ID for the new engineer
-            int id = Config.NextLinkId;
-            // Create the XML element for the engineer
-            XElement engineerXML = new XElement("Engineer",
-                new XElement("Id", id),
-            XElement engineerXML = new XElement("Engineer"
-                new XElement("Id", item.Id),
-                new XElement("Email", item.Email),
-                new XElement("Cost", item.Cost),
-                new XElement("Name", item.Name),
-                new XElement("Level", item.Level)
-            );
+        int newId = Config.NextLinkId;
+        Engineer newengineer = item with { Id = newId };
+        XElement engineerRootelement = LoadListFromXMLElement(s_Engineer_xml);
+        XElement engineer = ItemToXelement<Engineer>(newengineer, "Engineer");
+        engineerRootelement.Add(engineer);
+        SaveListToXMLElement(engineerRootelement, s_Engineer_xml);
 
-            // Load the existing Engineers XML
-            XElement engineersXML = LoadListFromXMLElement(s_Engineer_xml);
+        return newId;
 
-            // Append the new engineer to the list
-            engineersXML.Add(engineerXML);
-
-            // Save the updated Engineers XML
-            SaveListToXMLElement(engineersXML, s_Engineer_xml);
-
-            return id;
-        }
-        catch (Exception ex)
-        {
-            // Handle exceptions appropriately
-            throw new DalXMLFileLoadCreateException("Failed to create engineer in XML: " + ex.Message);
-        }
     }
+
+
+    //public int Create(Engineer item)
+    //{
+    //    try
+    //    {
+    //        // Ensure unique ID for the new engineer
+    //        int id = Config.NextLinkId;
+    //        // Create the XML element for the engineer
+    //        XElement engineerXML = new XElement("Engineer",
+    //            new XElement("Id", id),
+    //            //new XElement("Id", item.Id),
+    //            new XElement("Email", item.Email),
+    //            new XElement("Cost", item.Cost),
+    //            new XElement("Name", item.Name),
+    //            new XElement("Level", item.Level)
+    //        );
+
+    //        // Load the existing Engineers XML
+    //        XElement engineersXML = LoadListFromXMLElement(s_Engineer_xml);
+
+    //        // Append the new engineer to the list
+    //        engineersXML.Add(engineerXML);
+
+    //        // Save the updated Engineers XML
+    //        SaveListToXMLElement(engineersXML, s_Engineer_xml);
+
+    //        return id;
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        // Handle exceptions appropriately
+    //        throw new DalXMLFileLoadCreateException("Failed to create engineer in XML: " + ex.Message);
+    //    }
+    //}
 
 
     //public int Create(Engineer item)
@@ -103,12 +117,12 @@ internal class EngineerImplementation : IEngineer
 
     public Engineer? Read(int id)
     {
-       XElement? engineerElem = XMLTools.LoadListFromXMLElement(s_Engineer_xml).Elements().FirstOrDefault(st=> (int?)st.Element("Id")==id);
-        return engineerElem == null ? null : GetEngineer(engineerElem); 
+        XElement? engineerElem = XMLTools.LoadListFromXMLElement(s_Engineer_xml).Elements().FirstOrDefault(st => (int?)st.Element("Id") == id);
+        return engineerElem == null ? null : GetEngineer(engineerElem);
     }
     public Engineer? Read(Func<Engineer, bool> filter = null!)
     {
-       return XMLTools.LoadListFromXMLElement(s_Engineer_xml).Elements().Select(st =>GetEngineer(st)).FirstOrDefault(filter);
+        return XMLTools.LoadListFromXMLElement(s_Engineer_xml).Elements().Select(st => GetEngineer(st)).FirstOrDefault(filter);
     }
 
     public IEnumerable<Engineer> ReadAll(Func<Engineer, bool> filter = null!)
@@ -143,3 +157,5 @@ internal class EngineerImplementation : IEngineer
         SaveListToXMLElement(engineersXML, s_Engineer_xml);
     }
 }
+
+

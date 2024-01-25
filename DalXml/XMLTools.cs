@@ -1,6 +1,7 @@
 ﻿namespace Dal;
 
 using DO;
+using System.Reflection;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
@@ -109,5 +110,15 @@ static class XMLTools
             Name = (string?)e.Element("Name") ?? "",
             Level = e.ToEnumNullable<Expertise>("Level") ?? throw new FormatException("can't convert level"),
         };
+    }
+    internal static XElement ItemToXelement<Item>(Item item, string name)
+    {
+        IEnumerable<PropertyInfo> items = item!.GetType().GetProperties();
+
+        IEnumerable<XElement> xElements = from propInfo in items
+                                          select new XElement(propInfo.Name, propInfo.GetValue(item)!.ToString());
+
+        return new XElement(name, xElements);
+
     }
 }
