@@ -13,7 +13,8 @@ namespace DalTest
 
     internal class Program
     {
-        static readonly IDal s_dal = new DalList(); //stage 2
+        static readonly IDal s_dal = Factory.Get; //stage 4
+        //static readonly IDal s_dal = new DalList(); //stage 2
         //static readonly IDal s_dal = new DalXml(); //stage 3
 
 
@@ -405,7 +406,9 @@ namespace DalTest
                         DependencyMenu();
                         break;
                     case "4":
-                        Initialization.Do(s_dal);
+                        //Initialization.Do(s_dal); //stage 2
+                        Initialization.Do(); //stage 4
+
                         break;
 
                     default:
