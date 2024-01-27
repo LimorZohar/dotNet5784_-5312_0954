@@ -38,11 +38,11 @@ internal class TaskImplementation : ITask
         }
     }
 
-    public DO.Task? Read(int id) => 
+    public DO.Task? Read(int id) =>
          LoadListFromXMLSerializer<Task>(s_Task_xml).FirstOrDefault(x => x.Id == id);
-    
 
-    public DO.Task? Read(Func<DO.Task, bool> filter = null!)=>
+
+    public DO.Task? Read(Func<DO.Task, bool> filter = null!) =>
           LoadListFromXMLSerializer<Task>(s_Task_xml).FirstOrDefault(filter);
 
 

@@ -13,12 +13,9 @@ namespace DalTest
 
     internal class Program
     {
-        // static readonly IDal s_dal = new DalList(); //stage 2
-        static readonly IDal s_dal = new DalXml(); //stage 3
-        // Enums for main menu and submenus
+        static readonly IDal s_dal = new DalList(); //stage 2
+        //static readonly IDal s_dal = new DalXml(); //stage 3
 
-        enum MainMenu { EXIT, DEPENDENCY, ENGINEER, TASK }
-        enum SubMenu { EXIT, CREATE, READ, READALL, UPDATE, DELETE }
 
         /// Engineer menu for CRUD operations
 
@@ -26,31 +23,39 @@ namespace DalTest
         {
             int chooseSubMenu;
 
-            do
+            while (true)
             {
-                Console.WriteLine("enum SubMenu { EXIT ,CREATE , READ, READALL ,UPDATE,DELETE }");
-                int.TryParse(Console.ReadLine() ?? throw new DalDoesNotExistException("Enter a number please"), out chooseSubMenu);
+                Console.WriteLine("EXIT click 0\r\n" +
+                    "CREATE click 1\r\n" +
+                    "READ click 2\r\n" +
+                    "READALL click 3\r\n" +
+                    "UPDATE click 4\r\n" +
+                    "DELETE click 5\r\n");
+                chooseSubMenu = int.Parse(Console.ReadLine()!);
 
                 switch (chooseSubMenu)
                 {
                     case 1:
-                        /// Create engineer
-
-                        Console.WriteLine("Enter id, name, email, cost and a number to choose experience");
                         int idEngineer;
                         string nameEngineer, emailEngineer;
                         Expertise levelEngineer;
                         double costEngineer;
 
                         /// Input values
+                        Console.WriteLine("Enter engineer ID: ");
                         idEngineer = Console.Read();
-                        nameEngineer = (Console.ReadLine()!);
-                        emailEngineer = Console.ReadLine()!;
-                        costEngineer = double.Parse(Console.ReadLine()!);
-                        levelEngineer = (Expertise)Console.Read();
 
-                        /// Map number to EngineerExperience enum
-                        /// Create and add new engineer
+                        Console.WriteLine("Enter engineer name: ");
+                        nameEngineer = Console.ReadLine()!;
+
+                        Console.WriteLine("Enter engineer email: ");
+                        emailEngineer = Console.ReadLine()!;
+
+                        Console.WriteLine("Enter engineer cost: ");
+                        costEngineer = double.Parse(Console.ReadLine()!);
+
+                        Console.WriteLine("Enter engineer level (Expertise): ");
+                        levelEngineer = (Expertise)Console.Read();
 
                         s_dal.Engineer.Create(new Engineer(Id: idEngineer, Name: nameEngineer, Email: emailEngineer,
                             Level: (Expertise)levelEngineer, Cost: costEngineer));
@@ -67,7 +72,11 @@ namespace DalTest
 
                         if (s_dal.Engineer!.Read(id) is null)
                             Console.WriteLine("no engineer found");
-                        Console.WriteLine(s_dal.Engineer!.Read(id)!.ToString());
+                        try
+                        {
+                            Console.WriteLine(s_dal.Engineer!.Read(id)!.ToString());
+                        }
+                        catch (Exception ex) { Console.WriteLine(ex.Message); }
                         break;
                     case 3:
 
@@ -81,18 +90,23 @@ namespace DalTest
 
                         int idEngineerUpdate, currentNumUpdate;
                         string nameEngineerUpdate, emailEngineerUpdate;
-                        //Expertise levelEngineerUpdate;
                         double costEngineerUpdate;
+
                         Console.WriteLine("Enter id for reading");
                         idEngineerUpdate = int.Parse(Console.ReadLine()!);
-                        Console.WriteLine(s_dal.Engineer!.Read(idEngineerUpdate)!.ToString());
-                        Console.WriteLine("Enter details to update");//if null to put the same details
 
-                        // Input values for update
-                        nameEngineerUpdate = (Console.ReadLine()!);
+                        Console.WriteLine("Enter engineer name: ");
+                        nameEngineerUpdate = Console.ReadLine()!;
+
+                        Console.WriteLine("Enter engineer email: ");
                         emailEngineerUpdate = Console.ReadLine()!;
+
+                        Console.WriteLine("Enter engineer cost: ");
                         costEngineerUpdate = double.Parse(Console.ReadLine()!);
+
+                        Console.WriteLine("Enter current engineer number: ");
                         currentNumUpdate = int.Parse(Console.ReadLine()!);
+
 
 
                         s_dal.Engineer.Update(new Engineer(Id: idEngineerUpdate, Name: nameEngineerUpdate,
@@ -109,7 +123,7 @@ namespace DalTest
                         break;
                     default: return;
                 }
-            } while (chooseSubMenu > 0 && chooseSubMenu < 6);
+            }
         }
 
         /// Dependency menu for CRUD operations
@@ -118,70 +132,79 @@ namespace DalTest
         {
             int chooseSubMenu;
 
-            do
+            while (true)
             {
-                Console.WriteLine("enum SubMenu { EXIT ,CREATE , READ, READALL ,UPDATE,DELETE }");
-                chooseSubMenu = int.Parse(Console.ReadLine()!);
+                while (true)
+                {
+                    Console.WriteLine("EXIT click 0\r\n" +
+                        "CREATE click 1\r\n" +
+                        "READ click 2\r\n" +
+                        "READALL click 3\r\n" +
+                        "UPDATE click 4\r\n" +
+                        "DELETE click 5\r\n");
+                    chooseSubMenu = int.Parse(Console.ReadLine()!);
 
-                switch (chooseSubMenu)
-                {    // Create dependency
+                    switch (chooseSubMenu)
+                    {
+                        case 0:
+                            return;
 
-                    case 1:
-                        Console.WriteLine("Enter details for all the characteristics");
-                        int dependentTask, dependsOnTask;
-                        dependentTask = int.Parse(Console.ReadLine()!);
-                        dependsOnTask = int.Parse(Console.ReadLine()!);
-                        s_dal.Dependency.Create(new Dependency(0, dependentTask, dependsOnTask));
-                        break;
-                    case 2:
-                        // Read dependency
+                        case 1:
+                            int dependentTask, dependsOnTask;
 
-                        int id;
-                        Console.WriteLine("Enter id for reading");
-                        id = int.Parse(Console.ReadLine()!);
-                        // Check if dependency exists and print details
+                            Console.WriteLine("Enter dependent task: ");
+                            dependentTask = int.Parse(Console.ReadLine()!);
 
-                        if (s_dal.Dependency!.Read(id) is null)
-                            Console.WriteLine("no dependency found");
-                        Console.WriteLine(s_dal.Dependency!.Read(id)!.ToString());
-                        break;
-                    case 3:
-                        // Read all dependencies
+                            Console.WriteLine("Enter task it depends on: ");
+                            dependsOnTask = int.Parse(Console.ReadLine()!);
 
-                        foreach (var dependency in s_dal.Dependency!.ReadAll())
-                            Console.WriteLine(dependency!.ToString());
-                        break;
-                    case 4:
-                        // Update dependency
+                            s_dal.Dependency.Create(new Dependency(0, dependentTask, dependsOnTask));
+                            break;
 
-                        int idUpdate, dependentTaskUpdate, dependsOnTaskUpdate;
-                        Console.WriteLine("Enter id for reading");
-                        idUpdate = int.Parse(Console.ReadLine()!);
-                        Console.WriteLine(s_dal.Dependency!.Read(idUpdate)!.ToString());
-                        Console.WriteLine("Enter details to update");
+                        case 2:
+                            int id;
+                            Console.WriteLine("Enter id for reading");
+                            id = int.Parse(Console.ReadLine()!);
+                            if (s_dal.Dependency!.Read(id) is null)
+                                Console.WriteLine("no dependency found");
+                            Console.WriteLine(s_dal.Dependency!.Read(id)!.ToString());
+                            break;
 
-                        // Input values for update
+                        case 3:
+                            foreach (var dependency in s_dal.Dependency!.ReadAll())
+                                Console.WriteLine(dependency!.ToString());
+                            break;
 
-                        dependentTaskUpdate = int.Parse(Console.ReadLine()!);
-                        dependsOnTaskUpdate = int.Parse(Console.ReadLine()!);
+                        case 4:
+                            int idUpdate, dependentTaskUpdate, dependsOnTaskUpdate;
 
-                        // Create and update dependency
+                            Console.WriteLine("Enter id for reading");
+                            idUpdate = int.Parse(Console.ReadLine()!);
+                            Console.WriteLine(s_dal.Dependency!.Read(idUpdate)!.ToString());
 
-                        s_dal.Dependency!.Update(new(idUpdate, dependentTaskUpdate, dependsOnTaskUpdate));
+                            Console.WriteLine("Enter details to update\r\n");
 
-                        break;
-                    case 5:
+                            Console.WriteLine("Enter dependent task for update:\r\n");
+                            dependentTaskUpdate = int.Parse(Console.ReadLine()!);
 
-                        // Delete dependency
+                            Console.WriteLine("Enter task it depends on for update:\r\n");
+                            dependsOnTaskUpdate = int.Parse(Console.ReadLine()!);
 
-                        int idDelete;
-                        Console.WriteLine("Enter id for deleting");
-                        idDelete = int.Parse(Console.ReadLine()!);
-                        s_dal.Dependency!.Delete(idDelete);
-                        break;
-                    default: return;
+                            s_dal.Dependency!.Update(new(idUpdate, dependentTaskUpdate, dependsOnTaskUpdate));
+
+                            break;
+                        case 5:
+                            int idDelete;
+                            Console.WriteLine("Enter id for deleting\r\n");
+                            idDelete = int.Parse(Console.ReadLine()!);
+                            s_dal.Dependency!.Delete(idDelete);
+                            break;
+
+                        default:
+                            return;
+                    }
                 }
-            } while (chooseSubMenu > 0 && chooseSubMenu < 6);
+            }
         }
 
         // Task menu for CRUD operations
@@ -190,49 +213,78 @@ namespace DalTest
         {
             int chooseSubMenu;
 
-            do
+            while (true)
             {
-                Console.WriteLine("enum SubMenu { EXIT ,CREATE , READ, READALL ,UPDATE,DELETE }");
+                Console.WriteLine("EXIT click 0\r\n" +
+                    "CREATE click 1\r\n" +
+                    "READ click 2\r\n" +
+                    "READALL click 3\r\n" +
+                    "UPDATE click 4\r\n" +
+                    "DELETE click 5\r\n");
                 chooseSubMenu = int.Parse(Console.ReadLine()!);
 
                 switch (chooseSubMenu)
                 {
+                    case 0:
+                        return;
                     case 1:
-                        // Create task
-                        Console.WriteLine("Enter Task id:");
-                        int Tid = Console.Read();
-                        Console.WriteLine("Enter  TaskId");
-                        int taskEngineerId = 0;
-                        taskEngineerId = int.Parse(Console.ReadLine()!);
-                        Console.WriteLine("Enter alias");
-                        string? taskAlias = Console.ReadLine()!;
-                        Console.WriteLine("Enter  description");
-                        string? taskDescription = Console.ReadLine()!;
-                        Console.WriteLine("Enter deriverables");
-                        string? taskDeliverables = Console.ReadLine()!;
-                        Console.WriteLine("Enter  remarks");
-                        string? taskRemarks = Console.ReadLine()!;
-                        Console.WriteLine("Enter milestone");
-                        bool taskMilestone;
-                        taskMilestone = bool.Parse(Console.ReadLine()!);
-                        // Console.WriteLine("Enter dates");
-                        Console.WriteLine("Enter  task's num days");
-                        int currentTaskNum = 0;
-                        currentTaskNum = int.Parse(Console.ReadLine()!);
+                        int idTaskUpdate, currentTaskNumUpdate, taskEngineerIdUpdate;
+                        string taskDescriptionUpdate, taskAliasUpdate, taskDeliverablesUpdate, taskRemarksUpdate;
+                        bool taskMilestoneUpdate;
+                        DateTime taskCreateAtUpdate, taskStartUpdate, taskDeadlineUpdate, taskCompleteUpdate;
+                        TComplexity taskLevelUpdate;
 
-                        //DateTime taskCreateAt, taskStart, taskForecastDate, taskDeadline, taskComplete;
-                        //taskCreateAt = DateTime.Parse(Console.ReadLine()!);
-                        //taskStart = DateTime.Parse(Console.ReadLine()!);
-                        //taskForecastDate = DateTime.Parse(Console.ReadLine()!);
-                        //taskDeadline = DateTime.Parse(Console.ReadLine()!);
-                        //taskComplete = DateTime.Parse(Console.ReadLine()!);
-                        Console.WriteLine("Enter  task's level from 1-3");
-                        TComplexity taskLevel;
-                        taskLevel = (TComplexity)Console.Read();
-                        int num = int.Parse(Console.ReadLine()!);
-                        DateTime newT = DateTime.Now;
+                        Console.WriteLine("Enter id for reading");
+                        idTaskUpdate = int.Parse(Console.ReadLine()!);
 
-                        s_dal.Task.Create(new DO.Task(Id: taskEngineerId, Alias: taskAlias, Description: taskDescription, CreatedAtDate: null, RequiredEffortTime: null, taskMilestone, Complexity: taskLevel, StartDate: null, ScheduledDate: null, DeadlineDate: null, CompleteDate: null, Deliverables: taskDeliverables, Remarks: taskRemarks));
+                        Console.WriteLine("Enter task milestone (true/false): ");
+                        taskMilestoneUpdate = bool.Parse(Console.ReadLine()!);
+
+                        Console.WriteLine("Enter task engineer ID: ");
+                        taskEngineerIdUpdate = int.Parse(Console.ReadLine()!);
+
+                        Console.WriteLine("Enter task description: ");
+                        taskDescriptionUpdate = Console.ReadLine()!;
+
+                        Console.WriteLine("Enter task alias: ");
+                        taskAliasUpdate = Console.ReadLine()!;
+
+                        Console.WriteLine("Enter task deliverables: ");
+                        taskDeliverablesUpdate = Console.ReadLine()!;
+
+                        Console.WriteLine("Enter task remarks: ");
+                        taskRemarksUpdate = Console.ReadLine()!;
+
+                        Console.WriteLine("Enter task creation date (yyyy-MM-dd HH:mm:ss): ");
+                        taskCreateAtUpdate = DateTime.Parse(Console.ReadLine()!);
+
+                        Console.WriteLine("Enter task start date (yyyy-MM-dd HH:mm:ss): ");
+                        taskStartUpdate = DateTime.Parse(Console.ReadLine()!);
+
+                        Console.WriteLine("Enter task deadline (yyyy-MM-dd HH:mm:ss): ");
+                        taskDeadlineUpdate = DateTime.Parse(Console.ReadLine()!);
+
+                        Console.WriteLine("Enter task completion date (yyyy-MM-dd HH:mm:ss): ");
+                        taskCompleteUpdate = DateTime.Parse(Console.ReadLine()!);
+
+                        Console.WriteLine("Enter current task number: ");
+                        currentTaskNumUpdate = int.Parse(Console.ReadLine()!);
+                        taskLevelUpdate = (TComplexity)currentTaskNumUpdate;
+
+
+                        s_dal.Task.Create(new
+                            (Id: idTaskUpdate,
+                            Description: taskDescriptionUpdate,
+                            Alias: taskAliasUpdate,
+                            IsMilestone: taskMilestoneUpdate,
+                            CreatedAtDate: taskCreateAtUpdate,
+                            StartDate: taskStartUpdate,
+                            DeadlineDate: taskDeadlineUpdate,
+                            CompleteDate: taskCompleteUpdate,
+                            Deliverables: taskDeliverablesUpdate,
+                            Remarks: taskRemarksUpdate,
+                            EngineerId: taskEngineerIdUpdate,
+                            Complexity: taskLevelUpdate));
                         break;
 
                     // Read task
@@ -248,34 +300,55 @@ namespace DalTest
                     // Read all tasks
 
                     case 3:
-                        foreach (var task in s_dal.Task!.ReadAll())
-                            Console.WriteLine(task!.ToString());
+                        try
+                        {
+                            foreach (var task in s_dal.Task!.ReadAll())
+                                Console.WriteLine(task!.ToString());
+                        }
+                        catch (Exception ex) { Console.WriteLine(ex.Message); }
                         break;
 
                     // Update task
 
                     case 4:
-                        int idTaskUpdate, currentTaskNumUpdate, taskEngineerIdUpdate;
-                        string taskDescriptionUpdate, taskAliasUpdate, taskDeliverablesUpdate, taskRemarksUpdate;
-                        bool taskMilestoneUpdate;
-                        DateTime taskCreateAtUpdate, taskStartUpdate, taskDeadlineUpdate, taskCompleteUpdate;
-                        TComplexity taskLevelUpdate;
+
                         Console.WriteLine("Enter id for reading");
                         idTaskUpdate = int.Parse(Console.ReadLine()!);
-                        Console.WriteLine(s_dal.Task!.Read(idTaskUpdate)!.ToString());
-                        Console.WriteLine("Enter details to update");//if null to put the same details
+
+                        Console.WriteLine("Enter task milestone (true/false): ");
                         taskMilestoneUpdate = bool.Parse(Console.ReadLine()!);
+
+                        Console.WriteLine("Enter task engineer ID: ");
                         taskEngineerIdUpdate = int.Parse(Console.ReadLine()!);
+
+                        Console.WriteLine("Enter task description: ");
                         taskDescriptionUpdate = Console.ReadLine()!;
+
+                        Console.WriteLine("Enter task alias: ");
                         taskAliasUpdate = Console.ReadLine()!;
+
+                        Console.WriteLine("Enter task deliverables: ");
                         taskDeliverablesUpdate = Console.ReadLine()!;
+
+                        Console.WriteLine("Enter task remarks: ");
                         taskRemarksUpdate = Console.ReadLine()!;
+
+                        Console.WriteLine("Enter task creation date (yyyy-MM-dd HH:mm:ss): ");
                         taskCreateAtUpdate = DateTime.Parse(Console.ReadLine()!);
+
+                        Console.WriteLine("Enter task start date (yyyy-MM-dd HH:mm:ss): ");
                         taskStartUpdate = DateTime.Parse(Console.ReadLine()!);
+
+                        Console.WriteLine("Enter task deadline (yyyy-MM-dd HH:mm:ss): ");
                         taskDeadlineUpdate = DateTime.Parse(Console.ReadLine()!);
+
+                        Console.WriteLine("Enter task completion date (yyyy-MM-dd HH:mm:ss): ");
                         taskCompleteUpdate = DateTime.Parse(Console.ReadLine()!);
+
+                        Console.WriteLine("Enter current task number: ");
                         currentTaskNumUpdate = int.Parse(Console.ReadLine()!);
                         taskLevelUpdate = (TComplexity)currentTaskNumUpdate;
+
 
                         s_dal.Task.Update(
                             new
@@ -301,94 +374,47 @@ namespace DalTest
                         idDelete = int.Parse(Console.ReadLine()!);
                         s_dal.Task!.Delete(idDelete);
                         break;
-                    default: return;
+                    default:
+                        return;
                 }
-            } while (chooseSubMenu > 0 && chooseSubMenu < 6);
+            }
         }
 
         static void Main(string[] args)
         {
-            try
+            while (true)
             {
-                // Initialization.Do(s_dalDependency, s_dalEngineer, s_dalTask); // stage 1
-                // Initialization.Do(s_dal); // stage 2
-
-                Console.Write("Would you like to create Initial data? (Y/N)"); // stage 3
-                string? ans = Console.ReadLine() ?? throw new FormatException("Wrong input"); // stage 3
-
-
-                if (ans.ToUpper() == "Y") // stage 3 - Convert the input to uppercase for case-insensitivity
+                Console.WriteLine("Hello and welcome,\r\n" +
+                    "For engineers click 1,\r\n" +
+                    "For tasks click 2,\r\n" +
+                    "For dependencies click 3.\r\n" +
+                    "To intialize data click 4\r\n" +
+                    "EXIT click 5\r\n");
+                string action = Console.ReadLine()!;
+                switch (action)
                 {
-                    Initialization.Do(s_dal);
-                    //    var engineers = s_dal.Engineer.ReadAll();
-                    //    var tasks = s_dal.Task.ReadAll();
-                    //    var dependency = s_dal.Dependency.ReadAll();
+                    case "1":
+                        EngineerMenu();
+                        break;
 
-                    //    foreach (var en in engineers)
-                    //    {
-                    //        s_dal.Engineer.Delete(en.Id);
-                    //    }
+                    case "2":
+                        TaskMenu();
+                        break;
 
-                    //    foreach (var ts in tasks)
-                    //    {
-                    //        s_dal.Task.Delete(ts.Id);
-                    //    }
+                    case "3":
+                        DependencyMenu();
+                        break;
+                    case "4":
+                        Initialization.Do(s_dal);
+                        break;
 
-                    //    foreach (var de in dependency)
-                    //    {
-                    //        s_dal.Dependency.Delete(de.Id);
-                    //    }
-
-                    //    try
-                    //    {
-                    //        Initialization.Do(s_dal); // stage 2
-                    //    }
-                    //    catch (Exception ex)
-                    //    {
-                    //        Console.WriteLine(ex);
-                    //    }
-
-                    //int chooseEntity;
-
-                    //    do
-                    //    {
-                    //        // Display main menu options to the user
-                    //        Console.WriteLine("enum MainMenu { EXIT, DEPENDENCY, ENGINEER, TASK }");
-
-                    //        // Validate user input to ensure it's a valid integer
-                    //        while (!int.TryParse(Console.ReadLine(), out chooseEntity))
-                    //        {
-                    //            Console.WriteLine("Invalid input. Please enter a number.");
-                    //        }
-
-                    //        // Switch based on the user's choice of entity
-                    //        switch (chooseEntity)
-                    //        {
-                    //            case 1:
-                    //                // Invoke DependencyMenu for CRUD operations on dependencies
-                    //                DependencyMenu();
-                    //                break;
-                    //            case 2:
-                    //                // Invoke EngineerMenu for CRUD operations on engineers
-                    //                EngineerMenu();
-                    //                break;
-                    //            case 3:
-                    //                // Invoke TaskMenu for CRUD operations on tasks
-                    //                TaskMenu();
-                    //                break;
-                    //        }
-                    //    } while (chooseEntity > 0 && chooseEntity < 4);
-                    //}
+                    default:
+                        return;
                 }
             }
-            catch (Exception ex)
-            {
-                // Handle exceptions by printing the exception details to the console
-                Console.WriteLine(ex);
-            }
-
         }
 
     }
 }
+
 

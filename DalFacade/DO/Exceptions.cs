@@ -28,7 +28,7 @@ public class DalDeletionImpossible : Exception
 public class DalXMLFileLoadCreateException : Exception
 {
 
-    public DalXMLFileLoadCreateException(string? message) : base(message)    { }
-    public DalXMLFileLoadCreateException(string? message, Exception? innerException) : base(message, innerException)    { }
+    public DalXMLFileLoadCreateException(string? message) : base(message) { }
+    public DalXMLFileLoadCreateException(string? message, Exception? innerException) : base(message, innerException) { }
 
 }

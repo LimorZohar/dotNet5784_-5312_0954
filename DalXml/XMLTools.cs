@@ -36,7 +36,7 @@ static class XMLTools
         return nextId;
     }
     #endregion
-  
+
     #region SaveLoadWithXElement
     public static void SaveListToXMLElement(XElement rootElem, string entity)
     {
@@ -99,7 +99,7 @@ static class XMLTools
     }
     #endregion
 
-    
+
     public static Engineer GetEngineer(XElement e)
     {
         return new Engineer()

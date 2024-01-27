@@ -14,6 +14,6 @@ public record Dependency
     int DependsOnTask
 )
 {
-    public Dependency(): this( Id:0,0,0) {}
+    public Dependency() : this(Id: 0, 0, 0) { }
 }
 

@@ -5,7 +5,7 @@ public enum Expertise
 {
     Beginner,
     AdvancedBeginner,
-    Intermediate, 
+    Intermediate,
     Advanced,
     Expert
 }

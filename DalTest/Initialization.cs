@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 
 public static class Initialization
 {
-    
+
     private static IDal? s_dal; //stage 2
 
     private static readonly Random s_rand = new();
@@ -16,7 +16,7 @@ public static class Initialization
 
     //public static void Do(IDependency? _s_dalDependency, IEngineer? _s_dalEngineer, ITask? _s_dalTask)
     public static void Do(IDal dal) //stage 2
-    {   
+    {
         s_dal = dal ?? throw new NullReferenceException("DAL object can not be null!"); //stage 2
         createEngineers();
         createTasks();
@@ -28,7 +28,7 @@ public static class Initialization
         int _id;
         string _name, _email;
         Expertise _level;
-       
+
 
         // Details for sample engineers
         (string, string)[] EngineersDetails =
@@ -79,7 +79,7 @@ public static class Initialization
         TComplexity _level = TComplexity.Novice;/// Variable to store the experience level of an engineer
 
 
-         // Retrieve a list of all engineers
+        // Retrieve a list of all engineers
         IEnumerable<Engineer?> myEngineers = s_dal!.Engineer.ReadAll();
 
 
@@ -89,18 +89,18 @@ public static class Initialization
         {
             string _description = "Task " + (i + 1).ToString();
             string _alias = (i + 1).ToString();
-           
-            _level =(TComplexity)s_rand.Next((int)TComplexity.Novice, (int)TComplexity.Expert); /// Randomly select an engineer experience level
-           
+
+            _level = (TComplexity)s_rand.Next((int)TComplexity.Novice, (int)TComplexity.Expert); /// Randomly select an engineer experience level
+
             var nonNullEngineers = myEngineers.Where(e => e != null).ToList();
 
             int currentEngineerId = s_rand.Next(0, nonNullEngineers.Count);
 
-            DO.Task task = new Task 
+            DO.Task task = new Task
             {
                 Description = _description,
-                Alias = _alias ,
-                Complexity = _level ,
+                Alias = _alias,
+                Complexity = _level,
                 EngineerId = currentEngineerId,
             };
 
