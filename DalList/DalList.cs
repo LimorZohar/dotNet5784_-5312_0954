@@ -9,6 +9,7 @@ using DalApi;
 sealed internal class DalList : IDal
 {
     public static IDal Instance { get; } = new DalList();
+
     private DalList() { }
     public IDependency Dependency => new DependnecyImplementation();
 
