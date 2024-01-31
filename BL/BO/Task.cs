@@ -38,10 +38,10 @@ using System.Threading.Tasks;
             /// </summary>
             public bool IsMilestone { get; set; }
 
-            /// <summary>
-            /// The task's level of difficulty or complexity.
-            /// </summary>
-            public TComplexity Complexity { get; set; }
+        /// <summary>
+        /// The task's level of difficulty or complexity.
+        /// </summary>
+        public TComplexity Complexity { get; set; } = TComplexity.Novice;
 
             /// <summary>
             /// The date when work on the task is intended to begin.
@@ -77,6 +77,7 @@ using System.Threading.Tasks;
             /// The ID of the engineer responsible for the task.
             /// </summary>
             public int? EngineerId { get; set; }
+            public Status Status { get; set; } = Status.Unscheduled;
             public override string ToString() => this.ToStringProperty();
 
     }

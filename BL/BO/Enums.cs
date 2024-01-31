@@ -14,3 +14,7 @@ public enum TComplexity
     Competent,
     Expert
 }
+public enum Status
+{
+    Unscheduled, Scheduled, OnTrack, InJeopardy, Completed
+}
