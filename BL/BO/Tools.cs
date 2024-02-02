@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Reflection;
+using DalApi;
+
 namespace BO
 {
     static class Tools
@@ -44,7 +44,6 @@ namespace BO
             return result;
         }
 
-
         // Function that checks if the number is positive
         public static void ValidatePositiveId(int? id, string paramName)
         {
@@ -80,26 +79,53 @@ namespace BO
                 throw new BO.BlInvalidDataException($"Invalid email address for {paramName}.");
             }
         }
+
         public static Status CalculateStatus(DateTime? startDate, DateTime? SchedualDate, DateTime? deadlineDate, DateTime? completeDate)
         {
-            if (startDate != null && completeDate == null) // אם המשימה באמצע להעשות 
+            if (startDate != null && completeDate == null) // If the task is in progress
                 return Status.OnTrack;
 
-            if (completeDate != null) // אם המשימה הושלמה 
+            if (completeDate != null) // If the task is completed
                 return Status.Completed;
 
-            if (completeDate == null && DateTime.Now > SchedualDate) // אם המשימה עוד לא נגמרה וכבר עבר התאריך המתכונן לסיום
+            if (completeDate == null && DateTime.Now > SchedualDate) // If the task is not completed and the scheduled date has passed
                 return Status.InJeopardy;
 
-            if (SchedualDate == null && deadlineDate == null) // אם המשימה עוד לא בלוז
+            if (SchedualDate == null && deadlineDate == null) // If the task is not scheduled
                 return Status.Unscheduled;
 
-            if (SchedualDate != null && deadlineDate != null) // אם המשימה כבר בלוז
+            if (SchedualDate != null && deadlineDate != null) // If the task is scheduled
                 return Status.Scheduled;
 
             return Status.Unscheduled;
         }
 
-    }
+        public static List<BO.TaskInList>? CalculateList(int taskId)
+        {
+            // Get an IDal object from the Factory
+            DalApi.IDal _dal = Factory.Get;
 
+            // Create a list to store tasks
+            List<BO.TaskInList>? tasksList = new List<BO.TaskInList>();
+            // Read all dependencies of tasks dependent on the task with ID taskId
+            _dal.Dependency.ReadAll(d => d.DependentTask == taskId)
+                               // Get a list of tasks that are dependent on the task with ID taskId
+                               .Select(d => _dal.Task.Read(d1 => d1.Id == d.DependsOnTask))
+                               .ToList()
+                               .ForEach(task =>
+                               {
+                                   // Add TaskInList to the tasksList
+                                   tasksList.Add(new BO.TaskInList()
+                                   {
+                                       Id = task!.Id,
+                                       Alias = task.Alias,
+                                       Description = task.Description,
+                                       // Calculate and set the status according to the CalculateStatus function
+                                       Status = (BO.Status)Tools.CalculateStatus(task.StartDate, task.ScheduledDate, task.DeadlineDate, task.CompleteDate)
+                                   });
+                               });
+            // Return the tasksList
+            return tasksList;
+        }
+    }
 }

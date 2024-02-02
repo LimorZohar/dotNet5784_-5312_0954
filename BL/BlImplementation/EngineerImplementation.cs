@@ -13,7 +13,7 @@ internal class EngineerImplementation : IEngineer
 {
     private DalApi.IDal _dal = DalApi.Factory.Get;
     //private object boEngineer;
-    public int Create(BO.Engineer boEngineer)// Create a engineeer in do to bo
+    public int Create(BO.Engineer boEngineer)// Create a engineer in do to bo
     {
         Tools.ValidatePositiveId(boEngineer.Id, nameof(boEngineer.Id));
         Tools.ValidateNonEmptyString(boEngineer.Name, nameof(boEngineer.Name));
@@ -37,7 +37,7 @@ internal class EngineerImplementation : IEngineer
 
 
 
-    public BO.Engineer? Read(int id)//looking for engineer wuth the same id
+    public BO.Engineer? Read(int id)//looking for engineer with the same id
     {
 
         DO.Engineer? doEngineer = _dal.Engineer.Read(id);
@@ -70,19 +70,21 @@ internal class EngineerImplementation : IEngineer
     }
 
 
+    public IEnumerable<Engineer> ReadAll(Func<Engineer, bool>? filter = null)
+    {
+        var engineers = from DO.Engineer doEngineer in _dal.Engineer.ReadAll()
+                        let boEngineer = new Engineer
+                        {
+                            Id = doEngineer.Id,
+                            Email = doEngineer.Email,
+                            Cost = doEngineer.Cost,
+                            Name = doEngineer.Name,
+                            Level = (Expertise)(doEngineer.Level!)
+                        }
+                        select boEngineer;
 
-    public IEnumerable<Engineer> ReadAll(Func<Engineer, bool>? filter = null) =>
-        from DO.Engineer doEngineer in _dal.Engineer.ReadAll()
-        let boEngineer = new Engineer
-        {
-            Id = doEngineer.Id,
-            Email = doEngineer.Email,
-            Cost = doEngineer.Cost,
-            Name = doEngineer.Name,
-            Level = (Expertise)(doEngineer.Level!)
-        }
-        select boEngineer;
-
+        return filter != null ? engineers.Where(filter) : engineers;
+    }
 
 
     public void Update(Engineer boEngineer)
@@ -100,7 +102,7 @@ internal class EngineerImplementation : IEngineer
         }
 
         // Check for assigned Task
-        if (boEngineer.Task == null)
+        if (GetTask(boEngineer) == null)
         {
             throw new BO.BlInvalidDataException("Invalid Task. Engineer must be assigned to a task.");
         }
@@ -119,12 +121,16 @@ internal class EngineerImplementation : IEngineer
 
             _dal.Engineer.Update(doEngineer);
         }
-       
+
         catch (DO.DalAlreadyExistsException ex)
         {
             throw new BO.BlAlreadyExistsException($"Engineer with ID={boEngineer.Id} not exists", ex);
         }
     }
 
+    private static object GetTask(Engineer boEngineer)
+    {
+        return boEngineer.Task!;
+    }
 }
 

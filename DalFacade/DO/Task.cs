@@ -44,6 +44,8 @@ namespace DO
         /// RegistrationDate - registration date of the current student record
         /// </summary>
         public DateTime RegistrationDate => DateTime.Now; // get-only property with a corrected name
+
+        public object Level { get; set; }
     }
 }
 

@@ -33,7 +33,9 @@ namespace BO
         /// The engineer's expertise level.
         /// </summary>
         public Expertise? Level { get; set; }
-       // public Roles? Role { get; init; }
+        public object? Task { get; internal set; }
+
+        // public Roles? Role { get; init; }
 
         public override string ToString() => this.ToStringProperty();
     }
