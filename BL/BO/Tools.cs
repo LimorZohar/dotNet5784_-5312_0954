@@ -44,5 +44,62 @@ namespace BO
             return result;
         }
 
+
+        // Function that checks if the number is positive
+        public static void ValidatePositiveId(int? id, string paramName)
+        {
+            if (id <= 0)
+                throw new BO.BlInvalidDataException($"Invalid {paramName} ID. Must be a positive number.");
+        }
+
+        // Function that checks if the string is not empty or contains only spaces
+        public static void ValidateNonEmptyString(string? value, string paramName)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                throw new BO.BlInvalidDataException($"{paramName} cannot be empty.");
+        }
+
+        // Function that checks if the number is positive
+        public static void ValidatePositiveNumber(double? number, string paramName)
+        {
+            if (number < 0)
+                throw new BO.BlInvalidDataException($"Invalid {paramName}. Must be a positive number.");
+        }
+
+        // Function that checks the validity of an email address
+        public static void ValidateEmail(string? email, string paramName)
+        {
+            try
+            {
+                var addr = new System.Net.Mail.MailAddress(email!);
+                if (addr.Address != email)
+                    throw new BO.BlInvalidDataException($"Invalid email address for {paramName}.");
+            }
+            catch
+            {
+                throw new BO.BlInvalidDataException($"Invalid email address for {paramName}.");
+            }
+        }
+        public static Status CalculateStatus(DateTime? startDate, DateTime? SchedualDate, DateTime? deadlineDate, DateTime? completeDate)
+        {
+            if (startDate != null && completeDate == null) // אם המשימה באמצע להעשות 
+                return Status.OnTrack;
+
+            if (completeDate != null) // אם המשימה הושלמה 
+                return Status.Completed;
+
+            if (completeDate == null && DateTime.Now > SchedualDate) // אם המשימה עוד לא נגמרה וכבר עבר התאריך המתכונן לסיום
+                return Status.InJeopardy;
+
+            if (SchedualDate == null && deadlineDate == null) // אם המשימה עוד לא בלוז
+                return Status.Unscheduled;
+
+            if (SchedualDate != null && deadlineDate != null) // אם המשימה כבר בלוז
+                return Status.Scheduled;
+
+            return Status.Unscheduled;
+        }
+
     }
+
 }

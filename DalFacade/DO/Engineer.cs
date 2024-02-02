@@ -16,8 +16,11 @@ public record Engineer //engineer personal details
     double? Cost = null,
     string? Name = null,
     Expertise? Level = null
+
 )
 {
+    //public Engineer() : this(0, "") { }
+
     public Engineer() : this(0, null, 0, null, null) { } // empty ctor
 
 }
