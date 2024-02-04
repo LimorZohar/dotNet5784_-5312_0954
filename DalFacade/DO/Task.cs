@@ -46,6 +46,7 @@ namespace DO
         public DateTime RegistrationDate => DateTime.Now; // get-only property with a corrected name
 
         public object Level { get; set; }
+        public DateTime CreateAt { get; set; }
     }
 }
 
