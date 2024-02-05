@@ -80,8 +80,10 @@ using System.Threading.Tasks;
             public Status Status { get; set; } = Status.Unscheduled;
             public List<TaskInList>? Dependencies { get; set; } = null;//list of dependency
 
-             public MileStoneInTask? Milestone { get; set; } = null;
-            public override string ToString() => this.ToStringProperty();
+            public MileStoneInTask? Milestone { get; set; } = null;
+        internal EngineerInTask Engineer { get; set; }
+
+        public override string ToString() => this.ToStringProperty();
 
     }
 }

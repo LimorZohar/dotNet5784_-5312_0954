@@ -26,7 +26,7 @@ namespace BO
         public DateTime? ForecastDate { get; set; } = null;
 
         // A property that contains the milestone's deadline.
-        public DateTime? Deadline { get; se t; } = null;
+        public DateTime? Deadline { get; set; } = null;
 
         // A property that contains the milestone's completion date.
         public DateTime? Complete { get; set; } = null;

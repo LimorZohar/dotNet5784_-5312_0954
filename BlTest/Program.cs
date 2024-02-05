@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BlApi;
 using BO;
 using DalTest;
 namespace BlTest
@@ -12,45 +13,37 @@ namespace BlTest
     {
         // Static field to access the BL layer
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
-        enum MainMenu { EXIT, MILESTONE, ENGINEER, TASK }
-        enum SubMenu { EXIT, CREATE, READ, READALL, UPDATE, DELETE }
         static void Main(string[] args)
         {
-            Initialization.Do();
-
-            Console.WriteLine("Would you like to create Initial data? (Y/N)");
-            string? ans = Console.ReadLine() ?? throw new FormatException("Wrong input");
-
-            if (ans.ToUpper() == "Y")
-                DalTest.Initialization.Do();
-
             while (true)
             {
-                Console.WriteLine("Choose an option:");
-                Console.WriteLine("1. Manage Engineers");
-                Console.WriteLine("2. Manage Tasks");
-                Console.WriteLine("3. Manage Milestones");
-                Console.WriteLine("4. Exit");
-
-                string choice = Console.ReadLine();
-
-                switch (choice)
+                Console.WriteLine("Hello and welcome,\r\n" +
+                    "For engineers click 1,\r\n" +
+                    "For tasks click 2,\r\n" +
+                    "For MileStone click 3.\r\n" +
+                    "To intialize data click 4\r\n" +
+                    "EXIT click 5\r\n");
+                string action = Console.ReadLine()!;
+                switch (action)
                 {
                     case "1":
                         ManageEngineers();
                         break;
+
                     case "2":
                         ManageTasks();
                         break;
+
                     case "3":
                         MilestoneMenu();
                         break;
                     case "4":
-                        Environment.Exit(0);
+                        Initialization.Do(); 
+
                         break;
+
                     default:
-                        Console.WriteLine("Invalid choice. Please try again.");
-                        break;
+                        return;
                 }
             }
         }
@@ -58,50 +51,58 @@ namespace BlTest
         public static void ManageEngineers()
         {
 
-            SubMenu chooseSubMenu;
+            int chooseSubMenu;
 
-            do
+            while (true)
             {
                 Console.WriteLine("Choose an option:");
-                Console.WriteLine("0. EXIT");
-                Console.WriteLine("1. CREATE");
-                Console.WriteLine("2. READ");
-                Console.WriteLine("3. READALL ");
-                Console.WriteLine("4. UPDATE");
-                Console.WriteLine("5. DELETE");
+                Console.WriteLine("EXIT click 0\r\n" +
+                    "CREATE click 1\r\n" +
+                    "READ click 2\r\n" +
+                    "READALL click 3\r\n" +
+                    "UPDATE click 4\r\n" +
+                    "DELETE click 5\r\n");
 
-                // Get user input
-                int input;
-                if (!int.TryParse(Console.ReadLine() ?? throw new BlInvalidDataException("Enter a number please"), out input))
-                {
-                    Console.WriteLine("Invalid input. Please enter a valid number.");
-                    continue;
-                }
-
-                chooseSubMenu = (SubMenu)input;
+                chooseSubMenu = int.Parse(Console.ReadLine()!);
 
                 switch (chooseSubMenu)
                 {
-                    case SubMenu.CREATE:
+                    case 1:
                         // Implement create functionality
-                        Console.WriteLine("Enter Id, name,TaskId,Cost, email, level");
-                        int idEngineer,
-                            idTask;
-                        string nameEngineer,
-                               emailEngineer,enumhelp;
+                        int idEngineer;
+                        int idTask;
+                        string nameEngineer, emailEngineer,enumhelp;
                         double cost;
                         DO.Expertise levelEngineer;
                         try
-                        {
+                        {   //get the details from the user
+
+                            //get the id
+                            Console.WriteLine("Enter engineer ID: ");
                             int.TryParse(Console.ReadLine() ??//check the num of the enum
-                                throw new BlInvalidDataException("enter a number please"), out idEngineer);
+                                throw new BlInvalidDataException("Enter a number please"), out idEngineer);
+
+                            //get the name
+                            Console.WriteLine("Enter engineer name: ");
+
+                            //get the email
                             nameEngineer = (Console.ReadLine()!);
+                            Console.WriteLine("Enter engineer email: ");
                             emailEngineer = Console.ReadLine()!;
+
+                            //get the level
+                            Console.WriteLine("Enter 1-5 for level");
                             enumhelp = Console.ReadLine()!;
                             levelEngineer = (DO.Expertise)Enum.Parse
                                 (typeof(DO.Expertise), enumhelp);//change to level 
+
+                            //get the cost
+                            Console.WriteLine("Enter the cost");
                             double.TryParse(Console.ReadLine() ?? 
-                                throw new BlInvalidDataException("enter a doublenumber please"), out cost);
+                                throw new BlInvalidDataException("enter a number please"), out cost);
+
+                            //get the task id
+                            Console.WriteLine("Enter a task id"); nameEngineer = (Console.ReadLine()!);
                             int.TryParse(Console.ReadLine() ?? 
                                 throw new BlInvalidDataException("enter a number please"), out idTask);
 
@@ -112,11 +113,13 @@ namespace BlTest
                                 Email = emailEngineer,
                                 Level = (BO.Expertise)levelEngineer,
                                 Cost = cost,
-                                Task = new BO.TaskInEngineer()
+                                //get the task id
+                                Task = new TaskInEngineer()
                                 {
                                     Id = idTask,
                                     Alias = s_bl.Task.Read(idTask)!.Alias
                                 }
+
                             };
                             s_bl.Engineer.Create(newEng);
                         }
@@ -125,16 +128,19 @@ namespace BlTest
                             Console.WriteLine(ex);
                         }
                         break;
-                    case SubMenu.READ:
+
+
+                    // Implement create functionality
+                    case 2:
                         // Implement read functionality
                         Console.WriteLine("Enter id for reading");
                         int idEng;
-                        int.TryParse(Console.ReadLine() ?? throw new BlInvalidDataException("enter a number please"), out idEng);
+                        int.TryParse(Console.ReadLine() ?? throw new BlInvalidDataException("Enter a number please"), out idEng);
                         try
                         {
                             var engineer = s_bl.Engineer!.Read(idEng);
                             if (engineer is null)
-                                Console.WriteLine("No engineer found");// if threr is not found
+                                Console.WriteLine("No engineer found");// if there is not found
                             else
                             {
                           
@@ -147,9 +153,12 @@ namespace BlTest
                         }
 
                         break;
-                    case SubMenu.READALL:
+
+
+                    // Implement read all functionality
+                    case 3:
                      
-                        Console.WriteLine("read all the engineers");
+                        Console.WriteLine("Read all the engineers");
                         try
                         {
                             s_bl.Engineer!.ReadAll()
@@ -161,7 +170,9 @@ namespace BlTest
                             Console.WriteLine(ex);
                         }
                         break;
-                    case SubMenu.UPDATE:
+
+                     // Implement update functionality
+                    case 4:
                         int idEngineerUpdate;
                         string nameEngineerUpdate, emailEngineerUpdate, inputUpdate;
                         Expertise levelEngineerUpdate;
@@ -228,10 +239,12 @@ namespace BlTest
                             Console.WriteLine(ex);
                         }
                         break;
-                    case SubMenu.DELETE:
+
+                     // Implement delete functionality
+                    case 5:
                         int idDelete;
                         Console.WriteLine("Enter id for deleting");
-                        int.TryParse(Console.ReadLine() ?? throw new BlInvalidDataException("enter a number please"), out idDelete);
+                        int.TryParse(Console.ReadLine() ?? throw new BlInvalidDataException("Enter a number please"), out idDelete);
                         try
                         {
                             s_bl.Engineer!.Delete(idDelete);
@@ -245,58 +258,51 @@ namespace BlTest
                     default: return;
                 }
 
-            } while (chooseSubMenu != SubMenu.EXIT);
+            } 
         }
 
 
         public static void ManageTasks()
         {
-            SubMenu chooseSubMenu;
 
-            do
+            int chooseSubMenu;
+
+            while (true)
             {
-                Console.WriteLine("Choose an option for Tasks:");
-                Console.WriteLine("0. EXIT");
-                Console.WriteLine("1. CREATE");
-                Console.WriteLine("2. READ");
-                Console.WriteLine("3. READALL ");
-                Console.WriteLine("4. UPDATE");
-                Console.WriteLine("5. DELETE");
+                Console.WriteLine("Choose an option:");
+                Console.WriteLine("EXIT click 0\r\n" +
+                    "CREATE click 1\r\n" +
+                    "READ click 2\r\n" +
+                    "READALL click 3\r\n" +
+                    "UPDATE click 4\r\n" +
+                    "DELETE click 5\r\n");
 
-                // Get user input
-                int input;
-                if (!int.TryParse(Console.ReadLine() ?? throw new BlInvalidDataException("Enter a number please"), out input))
-                {
-                    Console.WriteLine("Invalid input. Please enter a valid number.");
-                    continue;
-                }
-
-                chooseSubMenu = (SubMenu)input;
+                chooseSubMenu = int.Parse(Console.ReadLine()!);
 
                 switch (chooseSubMenu)
                 {
-                    case SubMenu.EXIT:
+                    case 0:
                         Console.WriteLine("Exiting the Task Management. Goodbye!");
                         break;
-                    case SubMenu.CREATE:
+                    case 1:
                         int taskinlistid, EngId, days;
-                        string Alias, Description, delivers, remarks, inputEE;
+                        string alias, description, delivers, remarks, inputEE;
                         //DateTime? createat, startdate, scheddate, deadlinedate, complatedate;
                         TimeSpan? Requiredeffordtime;
-                        TComplexity  Complexity;
+                        TComplexity Complexity;
                         Status status;
                         List<BO.TaskInList?> taskInList = new List<TaskInList?>();
                         Console.WriteLine("$enter taskinlist id");
-                        int.TryParse(Console.ReadLine() ?? 
+                        int.TryParse(Console.ReadLine() ??
                             throw new BlInvalidDataException("enter a number please"), out taskinlistid);
                         Console.WriteLine("$description");
-                        Description= Console.ReadLine()!;
+                        description = Console.ReadLine()!;
                         Console.WriteLine("$enter remarks");
-                        remarks=Console.ReadLine()!;
-                        Console.WriteLine("$enter Alias");
-                        Alias=Console.ReadLine()!;
+                        remarks = Console.ReadLine()!;
+                        Console.WriteLine("$enter alias");
+                        alias = Console.ReadLine()!;
                         Console.WriteLine("$enter delivers");
-                        delivers=Console.ReadLine()!;
+                        delivers = Console.ReadLine()!;
                         Console.WriteLine("$enter engineer id");
                         int.TryParse(Console.ReadLine() ??
                             throw new BlInvalidDataException("enter a number please"), out EngId);
@@ -308,31 +314,32 @@ namespace BlTest
                         Complexity = (TComplexity)Enum.Parse(typeof(TComplexity), inputEE);
                         try
                         {
-                            while(taskinlistid != -1)
+                            while (taskinlistid != -1)
                             {
                                 taskInList!.Add(new BO.TaskInList()
                                 {
                                     Id = taskinlistid,
-                                    Description = s_bl.Task.Read(taskinlistid)!.Description,
                                     Alias = s_bl.Task.Read(taskinlistid)!.Alias,
+                                    Description = s_bl.Task.Read(taskinlistid)!.Description,
                                     Status = Tools.CalculateStatus(null, null, null, null)
                                 });
+
                                 taskinlistid = int.Parse(Console.ReadLine()!);
                             }
                             BO.Task newTask = new BO.Task()
                             {
                                 Id = 0,
-                                Description = Description,
-                                Alias = Alias,
+                                Description = description,
+                                Alias = alias,
                                 CreatedAtDate = DateTime.Now,
                                 StartDate = null,
                                 ScheduledDate = null,
-                                DeadlineDate = null, 
+                                DeadlineDate = null,
                                 CompleteDate = null,
                                 Deliverables = delivers,
                                 RequiredEffortTime = Requiredeffordtime,
                                 Remarks = remarks,
-                                Engineer = new EngineerInTask()
+                                Engineer = new BO.EngineerInTask()
                                 {
                                     Id = EngId,
                                     Name = s_bl.Engineer.Read(EngId)!.Name!
@@ -346,7 +353,8 @@ namespace BlTest
                         }
                         catch (Exception ex) { Console.WriteLine(ex); }
                         break;
-                    case SubMenu.READ:
+
+                    case 2:
                         int id;
                         Console.WriteLine("Enter id for reading");
                         int.TryParse(Console.ReadLine() ?? throw new BlInvalidDataException("enter a number please"), out id);
@@ -362,7 +370,8 @@ namespace BlTest
                             Console.WriteLine(ex);
                         }
                         break;
-                    case SubMenu.READALL:
+
+                    case 3:
                         try
                         {
                             s_bl.Task!.ReadAll()
@@ -373,10 +382,10 @@ namespace BlTest
                         {
                             Console.WriteLine(ex);
                         }
-                        break; 
-                        
-                        
-                    case SubMenu.UPDATE:
+                        break;
+
+
+                    case 4:
                         int idTaskUpdate,
                         taskEngineerIdUpdate,
                         taskInListIdUpdate;
@@ -425,8 +434,8 @@ namespace BlTest
                             }
                             Console.WriteLine("Enter input 1-5 to update the level");
                             inputEEUpdate = Console.ReadLine()!;
-                            taskLevelUpdate = string.IsNullOrWhiteSpace(inputEEUpdate) ? updatedTask.Level : (EngineerExperience)Enum.Parse(typeof(EngineerExperience), inputEEUpdate);
-                            Console.WriteLine("entertask in list id");
+                            taskLevelUpdate = string.IsNullOrWhiteSpace(inputEEUpdate) ? updatedTask.Complexity : (TComplexity)Enum.Parse(typeof(TComplexity), inputEEUpdate);
+                            Console.WriteLine("enter task in list id");
                             inputUpdate = Console.ReadLine()!;
 
                             if (string.IsNullOrWhiteSpace(inputUpdate))
@@ -450,14 +459,14 @@ namespace BlTest
                             }
                             Console.WriteLine("Enter ID of engineer");
                             inputUpdate = Console.ReadLine()!;
-                            taskEngineerIdUpdate = string.IsNullOrWhiteSpace(inputUpdate) ? updatedTask.Engineer!.Id : int.Parse(inputUpdate);
+                            taskEngineerIdUpdate = (int)(string.IsNullOrWhiteSpace(inputUpdate) ? updatedTask.EngineerId : int.Parse(inputUpdate));
 
                             BO.Task newTaskUpdate = new BO.Task()
                             {
                                 Id = idTaskUpdate,
-                                Description = taskDescriptionUpdate,
                                 Alias = taskAliasUpdate,
-                                CreateAtDate = updatedTask.CreateAtDate,
+                                Description = taskDescriptionUpdate,
+                                CreatedAtDate = updatedTask.CreatedAtDate,
                                 StartDate = updatedTask.StartDate,
                                 ScheduledDate = updatedTask.ScheduledDate,
                                 DeadlineDate = updatedTask.DeadlineDate,
@@ -467,7 +476,6 @@ namespace BlTest
                                 Remarks = taskRemarksUpdate,
                                 Engineer = new BO.EngineerInTask()
                                 {
-
                                     Id = taskEngineerIdUpdate,
                                     Name = s_bl.Engineer.Read(taskEngineerIdUpdate)!.Name!
                                 },
@@ -480,7 +488,7 @@ namespace BlTest
                         }
                         catch (Exception ex) { Console.WriteLine(ex); }
                         break;
-                    case SubMenu.DELETE:
+                    case 5:
                         int idDelete;
                         Console.WriteLine("Enter id for deleting");
                         try
@@ -496,9 +504,10 @@ namespace BlTest
                     default:
                         break;
                 }
-
-            } while (chooseSubMenu > 0 && chooseSubMenu < 6);
+            }
         }
+
+      
 
 
         public static void MilestoneMenu()
@@ -509,13 +518,12 @@ namespace BlTest
                 Console.WriteLine("EXIT - click 0\r\n" +
                                   "CREATE - click 1\r\n" +
                                   "READ - click 2\r\n" +
-                                  "UPDATE - click 3\r\n" +
+                                  "UPDATE - click 3\r\n");
                 chooseSubMenu = int.Parse(Console.ReadLine()!);
 
                 switch (chooseSubMenu)
                 {
                     case 0:
-                        // EXIT
                         return;
 
                     case 1:
@@ -555,14 +563,41 @@ namespace BlTest
                         // UPDATE
                         int idMilestoneUpdate;
                         string milestoneDescriptionUpdate,
-                            milestoneAliasUpdate;
+                                milestoneAliasUpdate;
                         string? milestoneRemarksUpdate;
                         Console.WriteLine("Enter id for reading milestone");
                         int.TryParse(Console.ReadLine() ??
                             throw new BlInvalidDataException("Enter a number please"), out idMilestoneUpdate);
                         try
                         {
-                        
+                            MileStone updatedMilestone = s_bl.MileStone.Read(idMilestoneUpdate)!;
+                            Console.WriteLine(updatedMilestone.ToString());
+                            Console.WriteLine("Enter description, alias, remarks ");//if null to put the same details
+                            milestoneDescriptionUpdate = Console.ReadLine()!;
+                            if (milestoneDescriptionUpdate == null || milestoneDescriptionUpdate == "")
+                            { milestoneDescriptionUpdate = updatedMilestone.Description!; }
+                            milestoneAliasUpdate = Console.ReadLine()!;
+                            if (milestoneAliasUpdate == null || milestoneAliasUpdate == "")
+                            { milestoneAliasUpdate = updatedMilestone.Alias!; }
+                            milestoneRemarksUpdate = Console.ReadLine();
+                            if (milestoneRemarksUpdate == null || milestoneRemarksUpdate == "")
+                            { milestoneRemarksUpdate = updatedMilestone.Remarks; }
+                            BO.MileStone newMilUpdate = new BO.MileStone()
+                            {
+                                Id = idMilestoneUpdate,
+                                Description = milestoneDescriptionUpdate,
+                                Alias = milestoneAliasUpdate,
+                                CreateAt = s_bl.MileStone.Read(idMilestoneUpdate)!.CreateAt,
+                                Status = s_bl.MileStone.Read(idMilestoneUpdate)!.Status,
+                                ForecastDate = s_bl.MileStone.Read(idMilestoneUpdate)!.ForecastDate,
+                                Deadline = s_bl.MileStone.Read(idMilestoneUpdate)!.Deadline,
+                                Complete = s_bl.MileStone.Read(idMilestoneUpdate)!.Complete,
+                                CompletionPercentage = s_bl.MileStone.Read(idMilestoneUpdate)!.CompletionPercentage,
+                                Remarks = milestoneRemarksUpdate,
+                                Dependencies = s_bl.MileStone.Read(idMilestoneUpdate)!.Dependencies
+                            };
+                            s_bl.MileStone.Update(newMilUpdate);
+
                         }
                         catch (Exception ex)
                         {
