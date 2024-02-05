@@ -36,6 +36,7 @@ namespace BO
         public object? Task { get; internal set; }
 
         // public Roles? Role { get; init; }
+        public TaskInEngineer? Task { get; set; } = null;
 
         public override string ToString() => this.ToStringProperty();
     }
