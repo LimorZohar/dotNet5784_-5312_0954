@@ -9,7 +9,7 @@ namespace BlImplementation
 {
     internal class MilestoneImplementation : IMileStone
     {
-        private DalApi.IDal _dal = BlApi.Factory.Get;
+        private DalApi.IDal _dal = DalApi.Factory.Get;
 
         // Function Create: Creates milestones in the system, starting and ending with unique tasks
         public IEnumerable<DO.Dependency> Create()
@@ -304,19 +304,19 @@ namespace BlImplementation
             // Update the milestone itself
             _dal.Task.Update(new DO.Task(
                 milestone.Id,
-                milestone.Description,
                 milestone.Alias,
-                
+                milestone.Description,
                 milestone.CreateAt,
-                null,
-                false,
+                milestone.RequiredEffortTime,
+                milestone.IsMilestone,
+                    milestone.Complexity,
+                            CalculateEarliestStartDate(milestone),
+                            CalculateLatestFinishDate(milestone),
+                            milestone.DeadlineDate,
+                            milestone.CompleteDate,
+                            milestone.Deliverables,
+                            milestone.Remarks, milestone.EngineerId)); 
                 
-                CalculateEarliestStartDate(milestone),
-                
-                null,
-                null,
-                null,
-                null));
         }
 
         // Calculate the latest possible finish date for a milestone
@@ -327,14 +327,14 @@ namespace BlImplementation
 
             // If there are no dependencies, the latest possible date is the planned project end date
             if (dependencies == null || dependencies.Count() == 0)
-                return _dal.DeadlineProject;
+                return _dal.Dependency.ReadAll(d => d.DependentTask == milestone.Id).Max(d => _dal.Task.Read(t => t.Id == d.DependsOnTask)!.DeadlineDate);
 
             // Set the latest possible finish date
             var dependenciesIds = dependencies.Select(d => d.DependentTask).ToList();
             var dependentTasks = _dal.Task.ReadAll(t => dependenciesIds.Any(number => number == t.Id)).ToList();
             DateTime? latestFinishDate = dependentTasks.Max(t =>
             {
-                return (DateTime)(t.DeadlineDate) - (TimeSpan)(t.RequiredEffortTime);
+                return (DateTime)(t.DeadlineDate!) - (TimeSpan)(t.RequiredEffortTime!);
             });
             return latestFinishDate;
         }
@@ -347,14 +347,14 @@ namespace BlImplementation
 
             // If there are no dependencies, the earliest possible date is the planned project start date
             if (dependencies == null || dependencies.Count() == 0)
-                return _dal.StartProject;
+                return _dal.Dependency.ReadAll(d => d.DependsOnTask == milestone.Id).Min(d => _dal.Task.Read(t => t.Id == d.DependsOnTask)!.StartDate);
 
             // Set the earliest possible start date
             var dependenciesIds = dependencies.Select(d => d.DependsOnTask).ToList();
             var dependentTasks = _dal.Task.ReadAll(t => dependenciesIds.Any(number => number == t.Id)).ToList();
             DateTime? earliestStartDate = dependentTasks.Min(t =>
             {
-                return t.ForecastDate;?:""
+                return t.CompleteDate != null ? (DateTime)t.CompleteDate : (DateTime)t.DeadlineDate!;
             });
             return earliestStartDate;
         }
