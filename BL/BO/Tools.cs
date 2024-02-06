@@ -6,7 +6,7 @@ using DalApi;
 
 namespace BO
 {
-    static class Tools
+   public static class Tools
     {
         // A function that returns a string representing the object's contents
         public static string ToStringProperty<T>(this T obj)

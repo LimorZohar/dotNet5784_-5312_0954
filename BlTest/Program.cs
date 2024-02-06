@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 using BlApi;
 using BO;
 using DalTest;
+
 namespace BlTest
 {
-    internal class program
+    internal class Program
     {
         // Static field to access the BL layer
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
@@ -84,9 +85,9 @@ namespace BlTest
 
                             //get the name
                             Console.WriteLine("Enter engineer name: ");
+                            nameEngineer = (Console.ReadLine()!);
 
                             //get the email
-                            nameEngineer = (Console.ReadLine()!);
                             Console.WriteLine("Enter engineer email: ");
                             emailEngineer = Console.ReadLine()!;
 
@@ -261,7 +262,7 @@ namespace BlTest
             } 
         }
 
-
+       
         public static void ManageTasks()
         {
 
@@ -285,16 +286,16 @@ namespace BlTest
                         Console.WriteLine("Exiting the Task Management. Goodbye!");
                         break;
                     case 1:
-                        int taskinlistid, EngId, days;
+                        int taskInListId, EngId, days;
                         string alias, description, delivers, remarks, inputEE;
                         //DateTime? createat, startdate, scheddate, deadlinedate, complatedate;
-                        TimeSpan? Requiredeffordtime;
+                        TimeSpan? RequiredEffordTime;
                         TComplexity Complexity;
-                        Status status;
+                        //Status status;
                         List<BO.TaskInList?> taskInList = new List<TaskInList?>();
                         Console.WriteLine("$enter taskinlist id");
                         int.TryParse(Console.ReadLine() ??
-                            throw new BlInvalidDataException("enter a number please"), out taskinlistid);
+                            throw new BlInvalidDataException("enter a number please"), out taskInListId);
                         Console.WriteLine("$description");
                         description = Console.ReadLine()!;
                         Console.WriteLine("$enter remarks");
@@ -308,23 +309,23 @@ namespace BlTest
                             throw new BlInvalidDataException("enter a number please"), out EngId);
                         Console.WriteLine("Enter  required effort time");
                         int.TryParse(Console.ReadLine() ?? throw new BlInvalidDataException("enter a number please"), out days);
-                        Requiredeffordtime = TimeSpan.FromDays(days);
+                        RequiredEffordTime = TimeSpan.FromDays(days);
                         Console.WriteLine("Enter input for level");
                         inputEE = Console.ReadLine()!;
                         Complexity = (TComplexity)Enum.Parse(typeof(TComplexity), inputEE);
                         try
                         {
-                            while (taskinlistid != -1)
+                            while (taskInListId != -1)
                             {
                                 taskInList!.Add(new BO.TaskInList()
                                 {
-                                    Id = taskinlistid,
-                                    Alias = s_bl.Task.Read(taskinlistid)!.Alias,
-                                    Description = s_bl.Task.Read(taskinlistid)!.Description,
+                                    Id = taskInListId,
+                                    Alias = s_bl.Task.Read(taskInListId)!.Alias,
+                                    Description = s_bl.Task.Read(taskInListId)!.Description,
                                     Status = Tools.CalculateStatus(null, null, null, null)
                                 });
 
-                                taskinlistid = int.Parse(Console.ReadLine()!);
+                                taskInListId = int.Parse(Console.ReadLine()!);
                             }
                             BO.Task newTask = new BO.Task()
                             {
@@ -337,7 +338,7 @@ namespace BlTest
                                 DeadlineDate = null,
                                 CompleteDate = null,
                                 Deliverables = delivers,
-                                RequiredEffortTime = Requiredeffordtime,
+                                RequiredEffortTime = RequiredEffordTime,
                                 Remarks = remarks,
                                 Engineer = new BO.EngineerInTask()
                                 {
@@ -459,7 +460,7 @@ namespace BlTest
                             }
                             Console.WriteLine("Enter ID of engineer");
                             inputUpdate = Console.ReadLine()!;
-                            taskEngineerIdUpdate = (int)(string.IsNullOrWhiteSpace(inputUpdate) ? updatedTask.EngineerId : int.Parse(inputUpdate));
+                            taskEngineerIdUpdate = (int)(string.IsNullOrWhiteSpace(inputUpdate) ? updatedTask.EngineerId : int.Parse(inputUpdate))!;
 
                             BO.Task newTaskUpdate = new BO.Task()
                             {

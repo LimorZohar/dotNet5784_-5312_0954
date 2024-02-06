@@ -81,7 +81,7 @@ using System.Threading.Tasks;
             public List<TaskInList>? Dependencies { get; set; } = null;//list of dependency
 
             public MileStoneInTask? Milestone { get; set; } = null;
-        internal EngineerInTask Engineer { get; set; }
+        public EngineerInTask? Engineer { get; set; }
 
         public override string ToString() => this.ToStringProperty();
 
