@@ -30,9 +30,6 @@ public partial class EngineerListWindow : Window
     public static readonly DependencyProperty engineersDep =
         DependencyProperty.Register(nameof(engineers), typeof(IEnumerable<BO.Engineer>), typeof(EngineerListWindow));
 
-
-
-
     public Array Selection
     {
         get { return (Array)GetValue(SelectionDep); }
@@ -43,12 +40,14 @@ public partial class EngineerListWindow : Window
     public static readonly DependencyProperty SelectionDep =
         DependencyProperty.Register(nameof(Selection), typeof(Array), typeof(EngineerListWindow));
 
-
-
-    public  EngineerListWindow()
+    /// <summary> EngineerListWindow constructor </summary>
+    public EngineerListWindow()
     {
+        //initialize the window
         InitializeComponent();
+        //get all engineers
         engineers = bl.Engineer.ReadAll();
+        //get all expertise
         SelectList = Enum.GetValues(typeof(BO.Expertise));
     }
     private void Select(object sender, TextCompositionEventArgs e)

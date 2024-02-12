@@ -127,7 +127,9 @@ namespace DalTest
             }
         }
 
+        /// <summary>
         /// Dependency menu for CRUD operations
+        /// </summary>
 
         private static void DependencyMenu()
         {

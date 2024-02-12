@@ -26,15 +26,8 @@ namespace PL
         private void Button_Click(object sender, RoutedEventArgs e)
         {
         }
-        private void OpenEngineeWindow(object sender, RoutedEventArgs e)
-        {
-            new EngineerListWindow().Show();
-        }
-        private void OpenAdminWindow(object sender, RoutedEventArgs e)
-        {
-            new EngineerWindow().Show();
-
-        }
+        private void OpenEngineerWindow(object sender, RoutedEventArgs e) => new EngineerListWindow().Show();
+        private void OpenAdminWindow(object sender, RoutedEventArgs e) => new EngineerWindow().Show();
 
 
         private void InitData(object sender, RoutedEventArgs e)

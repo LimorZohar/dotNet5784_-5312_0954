@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <Button Content="Engineer" HorizontalAlignment="Left" Margin="10,380,0,0" VerticalAlignment="Top" Height="44" Width="231" Click="OpenEngineeWindow"/>
+        <Button Content="Engineer" HorizontalAlignment="Left" Margin="10,380,0,0" VerticalAlignment="Top" Height="44" Width="231" Click="OpenEngineerWindow"/>
         <Button Content="admin" HorizontalAlignment="Left" Margin="620,352,0,0" VerticalAlignment="Top" Height="104" Width="175" Click="OpenAdminWindow"/>
         <Button Content="initDB" HorizontalAlignment="Left" Margin="400,352,0,0" VerticalAlignment="Top" Height="70" Width="181" Click="InitData"/>
     </Grid>

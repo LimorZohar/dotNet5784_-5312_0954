@@ -18,7 +18,9 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <ComboBox HorizontalAlignment="Stretch" Grid.Column="1" VerticalAlignment="Stretch" ItemsSource="{Binding Selection}"  SelectedItem="Select"/>
+            <!--<ComboBox HorizontalAlignment="Stretch" Grid.Column="1" VerticalAlignment="Stretch" ItemsSource="{Binding Selection}"  SelectedItem="Select"/>-->
+            <ComboBox ItemsSource="{Binding Source={StaticResource LevelCollectionKey}}"
+                Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
             <Label Content="Label" HorizontalAlignment="Left" Margin="73,10,0,0" VerticalAlignment="Top" Width="120" Grid.Column="0"/>
         </Grid>
         <ListView Grid.Row="1" ItemsSource="{Binding engineers}">
