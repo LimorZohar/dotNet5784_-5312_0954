@@ -1,0 +1,43 @@
+﻿<Window x:Class="PL.Engineer.EngineerListWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
+        Title="Engineer Details" Height="300" Width="300">
+   	 
+
+
+        <Grid Margin="10">
+            <StackPanel>
+                <Label Content="ID:"/>
+                <TextBox Text="{Binding Id}" IsEnabled="False"/>
+                <!-- תיבת טקסט ל-ID, לא ניתן לעריכה -->
+
+                <Label Content="Name:"/>
+                <TextBox Text="{Binding Name}"/>
+                <!-- תיבת טקסט לשם, אפשר לערוך -->
+
+                <Label Content="Email:"/>
+                <TextBox Text="{Binding Email}"/>
+                <!-- תיבת טקסט לאימייל, אפשר לערוך -->
+
+                <Label Content="Hourly Rate:"/>
+                <TextBox Text="{Binding Cost}"/>
+                <!-- תיבת טקסט לתעריף לשעת עבודה, אפשר לערוך -->
+
+                <Label Content="Expertise Level:"/>
+                <ComboBox SelectedItem="{Binding Level}">
+                    <!-- תיבת רשימה לרמת המומחיות, אפשר לערוך -->
+                    <ComboBoxItem>Junior</ComboBoxItem>
+                    <ComboBoxItem>Intermediate</ComboBoxItem>
+                    <ComboBoxItem>Senior</ComboBoxItem>
+                </ComboBox>
+
+                <Label Content="Assigned Task:"/>
+                <TextBox Text="{Binding Task}"/>
+                <!-- תיבת טקסט למשימה שהוע assigned למהנדס, אפשר לערוך -->
+
+                <!---->
+                <Button Content="שמור" HorizontalAlignment="Center" Margin="0,10,0,0" Click="SaveButton_Click"/>
+            </StackPanel>
+        </Grid>
+    </Window>
