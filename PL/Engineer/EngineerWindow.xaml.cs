@@ -8,18 +8,19 @@ namespace PL.Engineer
     {
         private readonly IBl bl = Factory.Get();
 
-       
-             public BO.Engineer CurrentEngineer
+
+        public BO.Engineer CurrentEngineer
         {
-            get {  return (BO.Engineer)GetValue(EngineerProperty); }
+            get { return (BO.Engineer)GetValue(EngineerProperty); }
             set { SetValue(EngineerProperty, value); }
         }
 
-        public static readonly DependencyProperty dependencyProperty =DependencyProperty.Register("CurrentEngineer",typeof(BO.Engineer),typeof(EngineerWindow));
+        public static readonly DependencyProperty EngineerProperty =
+            DependencyProperty.Register(nameof(CurrentEngineer), typeof(BO.Engineer), typeof(EngineerWindow));
 
-         public EngineerWindow(int id=0)
+        public EngineerWindow(int id = 0)
         {
-            InitializedCompenent();
+            InitializeComponent();
 
         }
         private void SaveButton_Click(object sender, RoutedEventArgs e)

@@ -1,15 +1,7 @@
 ﻿using PL.Engineer;
-using System.Text;
+using PL.Task;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using YourNamespace;
+
 
 namespace PL
 {
@@ -22,17 +14,21 @@ namespace PL
         {
             InitializeComponent();
         }
-
+        //Button_Click method
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            new EngineerListWindow().Show();
+
         }
         private void OpenEngineerWindow(object sender, RoutedEventArgs e) => new EngineerListWindow().Show();
         private void OpenAdminWindow(object sender, RoutedEventArgs e) => new EngineerWindow().Show();
 
-
+        
         private void InitData(object sender, RoutedEventArgs e)
         {
-
+                    
         }
+
+        private void OpenTaskWindow(object sender, RoutedEventArgs e)=> new TaskListWindows2().Show();
     }
 }
