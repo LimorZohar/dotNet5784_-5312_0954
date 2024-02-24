@@ -1,7 +1,7 @@
 ﻿
 
 namespace BlImplementation;
- using BlApi;
+using BlApi;
 using BO;
 using System;
 using System.Collections.Generic;
@@ -15,17 +15,18 @@ internal class EngineerImplementation : IEngineer
     //private object boEngineer;
     public int Create(BO.Engineer boEngineer)// Create a engineer in do to bo
     {
-        Tools.ValidatePositiveId(boEngineer.Id, nameof(boEngineer.Id));
-        Tools.ValidateNonEmptyString(boEngineer.Name, nameof(boEngineer.Name));
-        Tools.ValidateEmail(boEngineer.Email, nameof(boEngineer.Email));
-        Tools.ValidatePositiveNumber(boEngineer.Cost, nameof(boEngineer.Cost));
-
-
-        DO.Engineer doEngineer = new DO.Engineer
-            (boEngineer.Id, boEngineer.Email, boEngineer.Cost
-            , boEngineer.Name, (DO.Expertise)boEngineer.Level!);
         try
         {
+            Tools.ValidatePositiveId(boEngineer.Id, nameof(boEngineer.Id));
+            Tools.ValidateNonEmptyString(boEngineer.Name, nameof(boEngineer.Name));
+            Tools.ValidateEmail(boEngineer.Email, nameof(boEngineer.Email));
+            Tools.ValidatePositiveNumber(boEngineer.Cost, nameof(boEngineer.Cost));
+
+
+            DO.Engineer doEngineer = new DO.Engineer
+                (boEngineer.Id, boEngineer.Email, boEngineer.Cost
+                , boEngineer.Name, (DO.Expertise)boEngineer.Level!);
+
             int idEng = _dal.Engineer.Create(doEngineer);
             return idEng;
         }
@@ -50,7 +51,7 @@ internal class EngineerImplementation : IEngineer
             Email = doEngineer.Email,
             Cost = doEngineer.Cost,
             Name = doEngineer.Name,
-            Level =(Expertise) doEngineer.Level! 
+            Level = (Expertise)doEngineer.Level!
         };
     }
 
@@ -63,7 +64,7 @@ internal class EngineerImplementation : IEngineer
             _dal.Engineer.Delete(id);
         }
 
-        catch(Exception ex)
+        catch (Exception ex)
         {
             throw new BlFailedToDelete("$fail in delete the Id={id}", ex);
         }
@@ -101,11 +102,6 @@ internal class EngineerImplementation : IEngineer
             throw new BO.BlInvalidDataException("Invalid Engineer level. Must be above Junior.");
         }
 
-        // Check for assigned Task
-        if (GetTask(boEngineer) == null)
-        {
-            throw new BO.BlInvalidDataException("Invalid Task. Engineer must be assigned to a task.");
-        }
 
         // Update in the data layer
         try

@@ -7,8 +7,14 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <Button Content="Engineer" HorizontalAlignment="Left" Margin="10,380,0,0" VerticalAlignment="Top" Height="44" Width="231" Click="OpenEngineerWindow"/>
-        <Button Content="admin" HorizontalAlignment="Left" Margin="620,352,0,0" VerticalAlignment="Top" Height="104" Width="175" Click="OpenAdminWindow"/>
-        <Button Content="initDB" HorizontalAlignment="Left" Margin="400,352,0,0" VerticalAlignment="Top" Height="70" Width="181" Click="InitData"/>
+        <Grid.Background>
+            <ImageBrush ImageSource="/background.jpg"/>
+        </Grid.Background>
+        <StackPanel HorizontalAlignment="Left">
+            <Button Content="Engineer" Width="100" Margin="10,10,0,10" Click="OpenEngineerWindow"/>
+            <Button Content="admin" Width="100" Margin="10,10,0,10" Click="OpenAdminWindow"/>
+            <Button Content="initDB" Width="100" Margin="10,10,0,10" Click="InitData"/>
+        </StackPanel>
+   <!--<Button Content="Task" HorizontalAlignment="Left" Margin="35,263,0,0" VerticalAlignment="Top" Height="70" Width="181" Click="OpenTaskWindow"/>-->
     </Grid>
 </Window>

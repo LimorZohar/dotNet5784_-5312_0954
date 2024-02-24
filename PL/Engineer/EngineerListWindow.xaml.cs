@@ -1,13 +1,9 @@
 ﻿using BlApi;
-using System.Windows;
-using BO;
-using System.Collections.ObjectModel;
-using System.Windows.Documents;
-using System.Collections.Generic;
 using System;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Collections.Generic;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
-using System.Linq;
 
 namespace PL.Engineer;
 
@@ -50,10 +46,29 @@ public partial class EngineerListWindow : Window
         //get all expertise
         SelectList = Enum.GetValues(typeof(BO.Expertise));
     }
-    private void Select(object sender, TextCompositionEventArgs e)
-    {
-        BO.Expertise selected = (Expertise)sender;
-        engineers = bl.Engineer.ReadAll(x => x.Level == selected);
-    }
 
+    private void Select(object sender, SelectionChangedEventArgs e)
+    {
+        BO.Expertise selected = (BO.Expertise)((ComboBox)sender).SelectedValue;
+        engineers = bl.Engineer.ReadAll(x => x.Level == selected);
+
+    }
+    private void AddAndUpdate(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            if (sender is ListView listView)
+            {
+                var selected = (BO.Engineer)listView.SelectedItem;
+                new EngineerWindow(selected.Id).ShowDialog();
+                engineers = bl.Engineer.ReadAll();
+            }
+            else
+                new EngineerWindow().Show();
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"An error occurred: {ex.Message}");
+        }
+    }
 }

@@ -8,10 +8,19 @@
 		<OutputPath>$(SolutionDir)\bin\</OutputPath>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
-		<UseCommonOutputDirectory>true</UseCommonOutputDirectory>
+		<UseCommonOutputDirectory>false</UseCommonOutputDirectory>
 	</PropertyGroup>
+	<ItemGroup>
+	  <None Remove="background.jpg" />
+	</ItemGroup>
+	<ItemGroup>
+	  <PackageReference Include="MaterialDesignThemes" Version="4.9.0" />
+	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\BL\BL.csproj" />
 	  <ProjectReference Include="..\DalTest\DalTest.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Resource Include="background.jpg" />
 	</ItemGroup>
 </Project>

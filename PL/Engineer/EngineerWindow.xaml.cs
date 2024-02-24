@@ -2,29 +2,56 @@
 using System;
 using System.Windows;
 
-namespace PL.Engineer
+namespace PL.Engineer;
+
+public partial class EngineerWindow : Window
 {
-    public partial class EngineerWindow : Window
+    private readonly IBl bl = Factory.Get();
+
+    public bool addMode
     {
-        private readonly IBl bl = Factory.Get();
+        get { return (bool)GetValue(addModeProperty); }
+        set { SetValue(addModeProperty, value); }
+    }
 
-       
-             public BO.Engineer CurrentEngineer
+    // Using a DependencyProperty as the backing store for addMode.  This enables animation, styling, binding, etc...
+    public static readonly DependencyProperty addModeProperty =
+        DependencyProperty.Register("addMode", typeof(bool), typeof(EngineerWindow));
+
+
+    public BO.Engineer engineer
+    {
+        get { return (BO.Engineer)GetValue(EngineerProperty); }
+        set { SetValue(EngineerProperty, value); }
+    }
+
+    public static readonly DependencyProperty EngineerProperty =
+        DependencyProperty.Register(nameof(engineer), typeof(BO.Engineer), typeof(EngineerWindow));
+
+    public EngineerWindow(int id = 0)
+    {
+        addMode = id == 0;
+        InitializeComponent();
+        try
         {
-            get {  return (BO.Engineer)GetValue(EngineerProperty); }
-            set { SetValue(EngineerProperty, value); }
+            if (!addMode)
+                engineer = bl.Engineer.Read(id)!;
         }
+        catch (Exception ex) { MessageBox.Show(ex.Message); }
 
-        public static readonly DependencyProperty dependencyProperty =DependencyProperty.Register("CurrentEngineer",typeof(BO.Engineer),typeof(EngineerWindow));
-
-         public EngineerWindow(int id=0)
+    }
+    private void SaveButton_Click(object sender, RoutedEventArgs e)
+    {
+        try
         {
-            InitializedCompenent();
+            if (addMode)
+                bl.Engineer.Create(engineer);
+            else
+                bl.Engineer.Update(engineer);
 
+            MessageBox.Show("succseful");
+            this.Close();
         }
-        private void SaveButton_Click(object sender, RoutedEventArgs e)
-        {
-            // ניתן להוסיף כאן לוגיקה נוספת לשמירת הנתונים למאגר הנתונים
-        }
+        catch (Exception ex) { MessageBox.Show(ex.Message); }
     }
 }
