@@ -6,15 +6,16 @@
         xmlns:local="clr-namespace:PL"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
+    <Grid Margin="0,0,10,-16">
         <Grid.Background>
             <ImageBrush ImageSource="/background.jpg"/>
         </Grid.Background>
-        <StackPanel HorizontalAlignment="Left">
-            <Button Content="Engineer" Width="100" Margin="10,10,0,10" Click="OpenEngineerWindow"/>
-            <Button Content="admin" Width="100" Margin="10,10,0,10" Click="OpenAdminWindow"/>
-            <Button Content="initDB" Width="100" Margin="10,10,0,10" Click="InitData"/>
-        </StackPanel>
-   <!--<Button Content="Task" HorizontalAlignment="Left" Margin="35,263,0,0" VerticalAlignment="Top" Height="70" Width="181" Click="OpenTaskWindow"/>-->
+
+        <!-- goes to ManagerWindow-->
+        <Button Content="כניסת מנהל" HorizontalAlignment="Left" Width="190"  Click="Maneger_Click" RenderTransformOrigin="0.482,-0.906" Margin="436,166,0,0"/>
+        <!-- goes to EngineerWindow-->
+        <Button Content="כניסת מהנדס" HorizontalAlignment="Left" Width="190" Click="Engineer_Click" RenderTransformOrigin="0.482,-0.906" Margin="124,166,0,0"/>
+
+
     </Grid>
 </Window>
