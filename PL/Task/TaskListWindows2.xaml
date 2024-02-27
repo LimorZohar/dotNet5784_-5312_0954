@@ -7,13 +7,13 @@
         mc:Ignorable="d"
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
         Title="TaskListWindows2" Height="450" Width="800">
-    <!--<Window.Resources>
+    <Window.Resources>
         <CollectionViewSource x:Key="GroupData" Source="{Binding Tasks }">
             <CollectionViewSource.GroupDescriptions>
                 <PropertyGroupDescription x:Name="GroupDescription" PropertyName="Complexity"/>
             </CollectionViewSource.GroupDescriptions>
         </CollectionViewSource>
-    </Window.Resources>-->
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40*"/>
@@ -39,6 +39,18 @@
                     </GridViewColumn>
                     <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding  Complexity}">
                         <GridViewColumnHeader>Complexity</GridViewColumnHeader>
+                    </GridViewColumn>
+                    <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding  Alias}">
+                        <GridViewColumnHeader>Alias</GridViewColumnHeader>
+                    </GridViewColumn>
+                    <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding Engineer.Name }">
+                        <GridViewColumnHeader>EngineerName</GridViewColumnHeader>
+                    </GridViewColumn>
+                    <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding  Description}">
+                        <GridViewColumnHeader>Description</GridViewColumnHeader>
+                    </GridViewColumn>
+                    <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding  Status}">
+                        <GridViewColumnHeader>Status</GridViewColumnHeader>
                     </GridViewColumn>
                 </GridView>
             </ListView.View>

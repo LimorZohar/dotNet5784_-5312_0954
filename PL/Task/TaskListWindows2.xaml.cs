@@ -2,17 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+
 
 namespace PL.Task;
 
@@ -24,7 +17,6 @@ public partial class TaskListWindows2 : Window
     private readonly IBl bl = Factory.Get();
 
     private readonly Array SelectList;
-
 
     public IEnumerable<BO.Task> Tasks
     {
@@ -46,15 +38,16 @@ public partial class TaskListWindows2 : Window
     public static readonly DependencyProperty SelectionDep =
         DependencyProperty.Register(nameof(Selection), typeof(Array), typeof(TaskListWindows2));
 
-    ICollectionView collectionView { set; get; }
+   // ICollectionView collectionView { set; get; }
     public TaskListWindows2()
     {
         InitializeComponent();
+     
         Tasks = bl.Task.ReadAll();
         SelectList = Enum.GetValues(typeof(BO.Expertise));
 
-        collectionView = CollectionViewSource.GetDefaultView(Tasks);
-        this.collectionView.GroupDescriptions.Add(new PropertyGroupDescription("Complexity"));
+        //collectionView = CollectionViewSource.GetDefaultView(Tasks);
+        //this.collectionView.GroupDescriptions.Add(new PropertyGroupDescription("Complexity"));
     }
 
     private void Select(object sender, SelectionChangedEventArgs e)
