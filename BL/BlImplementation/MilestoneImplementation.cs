@@ -10,6 +10,9 @@ namespace BlImplementation
     internal class MilestoneImplementation : IMileStone
     {
         private DalApi.IDal _dal = DalApi.Factory.Get;
+        private readonly Bl _bl;
+        internal MilestoneImplementation(Bl bl) => _bl = bl;
+
 
         // Function Create: Creates milestones in the system, starting and ending with unique tasks
         public IEnumerable<DO.Dependency> Create()

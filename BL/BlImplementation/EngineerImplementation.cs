@@ -13,6 +13,9 @@ internal class EngineerImplementation : IEngineer
 {
     private DalApi.IDal _dal = DalApi.Factory.Get;
     //private object boEngineer;
+    private readonly Bl _bl;
+    internal EngineerImplementation(Bl bl) => _bl = bl;
+
     public int Create(BO.Engineer boEngineer)// Create a engineer in do to bo
     {
         try

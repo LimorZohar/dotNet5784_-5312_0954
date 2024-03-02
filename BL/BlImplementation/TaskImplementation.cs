@@ -11,6 +11,9 @@
     {
         private DalApi.IDal _dal = DalApi.Factory.Get;
 
+        private readonly Bl _bl;
+        internal TaskImplementation(Bl bl) => _bl = bl;
+
         public int Create(BO.Task boTask)
         {
             Tools.ValidateNonEmptyString(boTask.Alias, nameof(boTask.Alias));
