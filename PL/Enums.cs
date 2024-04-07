@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 namespace PL;
     /// <summary>
-    /// enum collection for engineer expertise
+    /// enum collection for Engineer expertise
        
 public class LevelCollection : IEnumerable
 {

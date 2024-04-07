@@ -19,23 +19,27 @@ public partial class EngineerWindow : Window
         DependencyProperty.Register("addMode", typeof(bool), typeof(EngineerWindow));
 
 
-    public BO.Engineer engineer
+    public BO.Engineer Engineer
     {
         get { return (BO.Engineer)GetValue(EngineerProperty); }
         set { SetValue(EngineerProperty, value); }
     }
 
     public static readonly DependencyProperty EngineerProperty =
-        DependencyProperty.Register(nameof(engineer), typeof(BO.Engineer), typeof(EngineerWindow));
+        DependencyProperty.Register(nameof(Engineer), typeof(BO.Engineer), typeof(EngineerWindow));
 
+    private int _id;
     public EngineerWindow(int id = 0)
     {
+        _id = id;
         addMode = id == 0;
         InitializeComponent();
         try
         {
             if (!addMode)
-                engineer = bl.Engineer.Read(id)!;
+                Engineer = bl.Engineer.Read(id)!;
+            else
+                Engineer = new();
         }
         catch (Exception ex) { MessageBox.Show(ex.Message); }
 
@@ -45,13 +49,15 @@ public partial class EngineerWindow : Window
         try
         {
             if (addMode)
-                bl.Engineer.Create(engineer);
+                bl.Engineer.Create(Engineer);
             else
-                bl.Engineer.Update(engineer);
+                bl.Engineer.Update(Engineer);
 
             MessageBox.Show("succseful");
             this.Close();
         }
         catch (Exception ex) { MessageBox.Show(ex.Message); }
     }
+
+    private void ChooseTask(object sender, RoutedEventArgs e) => new SelectTaskWindow(_id).Show();
 }

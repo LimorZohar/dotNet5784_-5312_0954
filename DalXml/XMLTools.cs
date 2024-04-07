@@ -121,4 +121,38 @@ static class XMLTools
         return new XElement(name, xElements);
 
     }
+
+    public static void SetDate(DateTime? date, string path, string entity)
+    {
+        try
+        {
+            XElement root = LoadListFromXMLElement(path);
+            XElement child = root.Element(entity) ?? new("");
+            child.Value = date.ToString() ?? null!;
+            root.Element(entity)!.ReplaceWith(child);
+            SaveListToXMLElement(root, path);
+        }
+        catch (Exception ex)
+        {
+            throw new DalXMLFileLoadCreateException($"fail to load xml file: {path}, {ex.Message}");
+        }
+    }
+    public static DateTime? GetDate(string path, string entity)
+    {
+        try
+        {
+            XElement root = LoadListFromXMLElement(path);
+            XElement? child = root.Element(entity);
+            if (child == null)
+                return null;
+
+            DateTime.TryParse(child.Value, out DateTime date);
+
+            return date;
+        }
+        catch (Exception ex)
+        {
+            throw new DalXMLFileLoadCreateException($"fail to load xml file: {path}, {ex.Message}");
+        }
+    }
 }

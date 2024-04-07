@@ -32,6 +32,8 @@ internal class DependnecyImplementation : IDependency
         // return new List<Dependency>(DataSource.Dependencies!);
     }
 
+    public void Reset() => Dependencies.Clear();
+
     public void Update(Dependency item)
     {
         int index = Dependencies.FindIndex(x => x!.Id == item.Id);

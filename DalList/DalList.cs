@@ -17,4 +17,16 @@ sealed internal class DalList : IDal
 
     public ITask Task => new TaskImplementation();
 
+    public DateTime Clock { get; set; } = DateTime.Now;
+
+    public DateTime? StartDate
+    {
+        get { return DataSource.Config.StartDate; }
+        set { DataSource.Config.StartDate = value; }
+    }
+    public DateTime? EndDate
+    {
+        get { return DataSource.Config.EndDate; }
+        set { DataSource.Config.EndDate = value; }
+    }
 }

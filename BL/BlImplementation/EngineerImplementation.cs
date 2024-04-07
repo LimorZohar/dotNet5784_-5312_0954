@@ -12,9 +12,8 @@ using System.Xml.Linq;
 internal class EngineerImplementation : IEngineer
 {
     private DalApi.IDal _dal = DalApi.Factory.Get;
-    //private object boEngineer;
-    private readonly Bl _bl;
-    internal EngineerImplementation(Bl bl) => _bl = bl;
+
+    //    private readonly Bl _bl;
 
     public int Create(BO.Engineer boEngineer)// Create a engineer in do to bo
     {
@@ -116,9 +115,18 @@ internal class EngineerImplementation : IEngineer
                 Email = boEngineer.Email,
                 Level = (DO.Expertise)boEngineer.Level!,
                 Cost = boEngineer.Cost,
+                
             };
 
             _dal.Engineer.Update(doEngineer);
+
+            if(boEngineer.Task is not null && boEngineer.Task.Id != 0)
+            {
+                DO.Task t = _dal.Task.Read(boEngineer.Task.Id) ?? throw new BlDoesNotExistException("the task dont exist");
+                _dal.Task.Update(t with { EngineerId = boEngineer.Id });
+            }
+
+                
         }
 
         catch (DO.DalAlreadyExistsException ex)

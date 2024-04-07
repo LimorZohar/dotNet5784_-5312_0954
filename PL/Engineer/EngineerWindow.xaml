@@ -5,42 +5,41 @@
         xmlns:local="clr-namespace:PL.Engineer"
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
         Title="Engineer Details" 
-        Height="400" Width="300">
+        Height="420" Width="300">
 
 
 
     <Grid Margin="10">
         <StackPanel >
             <Label Content="ID:"/>
-            <TextBox Text="{Binding engineer.Id, Mode=TwoWay}" IsEnabled="{Binding addMode}"/>
+            <TextBox Text="{Binding Engineer.Id, Mode=TwoWay}" IsEnabled="{Binding addMode}"/>
             <!-- תיבת טקסט ל-ID, לא ניתן לעריכה -->
 
             <Label Content="Name:"/>
-            <TextBox Text="{Binding engineer.Name, Mode=TwoWay}"/>
+            <TextBox Text="{Binding Engineer.Name, Mode=TwoWay}"/>
             <!-- תיבת טקסט לשם, אפשר לערוך -->
 
             <Label Content="Email:"/>
-            <TextBox Text="{Binding engineer.Email, Mode=TwoWay}"/>
+            <TextBox Text="{Binding Engineer.Email, Mode=TwoWay}"/>
             <!-- תיבת טקסט לאימייל, אפשר לערוך -->
 
             <Label Content="Hourly Rate:"/>
-            <TextBox Text="{Binding engineer.Cost, Mode=TwoWay}"/>
+            <TextBox Text="{Binding Engineer.Cost, Mode=TwoWay}"/>
             <!-- תיבת טקסט לתעריף לשעת עבודה, אפשר לערוך -->
 
             <Label Content="Expertise Level:"/>
-            <ComboBox SelectedItem="{Binding engineer.Level, Mode=TwoWay}">
-                <!-- תיבת רשימה לרמת המומחיות, אפשר לערוך -->
-                <ComboBoxItem>Junior</ComboBoxItem>
-                <ComboBoxItem>Intermediate</ComboBoxItem>
-                <ComboBoxItem>Senior</ComboBoxItem>
-            </ComboBox>
+            <ComboBox SelectedItem="{Binding Engineer.Level, Mode=TwoWay}" ItemsSource="{StaticResource LevelCollectionKey}"/>
+            <!-- תיבת רשימה לרמת המומחיות, אפשר לערוך -->
+
 
             <Label Content="Assigned Task:"/>
-            <TextBox Text="{Binding engineer.Task}"/>
+            <TextBox Text="{Binding Engineer.Task}"/>
             <!-- תיבת טקסט למשימה שהוע assigned למהנדס, אפשר לערוך -->
 
             <!---->
             <Button Content="שמור" HorizontalAlignment="Center" Margin="0,10,0,0" Click="SaveButton_Click"/>
+            <Button Content="בחירת משימה" HorizontalAlignment="Center" Margin="0,10,0,0" Click="ChooseTask"/>
+
         </StackPanel>
     </Grid>
 </Window>

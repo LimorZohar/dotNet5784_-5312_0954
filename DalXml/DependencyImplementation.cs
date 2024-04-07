@@ -9,8 +9,8 @@ internal class DependencyImplementation : IDependency
     public int Create(Dependency item)
     {
         var dependecies = LoadListFromXMLSerializer<Dependency>(s_Dependency_xml);
-
-        Dependency copy = item with { Id = item.Id };
+        int id = Config.NextLinkId;
+        Dependency copy = item with { Id = id };
         dependecies.Add(copy);
         SaveListToXMLSerializer<Dependency>(dependecies, s_Dependency_xml);
         return copy.Id;
@@ -28,6 +28,9 @@ internal class DependencyImplementation : IDependency
         SaveListToXMLSerializer<Dependency>(dependecies, s_Dependency_xml);
     }
 
+    public void Reset() => XMLTools.SaveListToXMLSerializer<Dependency>(new List<Dependency>(), s_Dependency_xml);
+
+
     public Dependency? Read(int id) =>
         LoadListFromXMLSerializer<Dependency>(s_Dependency_xml).FirstOrDefault(x => x.Id == id);
 
@@ -35,7 +38,7 @@ internal class DependencyImplementation : IDependency
         LoadListFromXMLSerializer<Dependency>(s_Dependency_xml).FirstOrDefault(filter);
 
     public IEnumerable<Dependency> ReadAll(Func<Dependency, bool> filter = null!) =>
-        LoadListFromXMLSerializer<Dependency>(s_Dependency_xml).Where(filter);
+        LoadListFromXMLSerializer<Dependency>(s_Dependency_xml).Where(task => filter is null ? true : filter(task));
 
     public void Update(Dependency item)
     {

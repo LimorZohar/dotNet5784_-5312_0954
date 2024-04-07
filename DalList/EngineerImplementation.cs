@@ -15,6 +15,9 @@ internal class EngineerImplementation : IEngineer
         return item.Id;
     }
 
+    public void Reset() => Engineers.Clear();
+
+
     public void Delete(int id) => Engineers.RemoveAll(x => x!.Id == id);
 
     public Engineer? Read(Func<Engineer, bool> filter = null!) => Engineers.FirstOrDefault(x => x!.Equals(filter));

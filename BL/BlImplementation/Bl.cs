@@ -9,31 +9,38 @@ namespace BlImplementation
 {
     internal class Bl : IBl
     {
-        public IEngineer Engineer =>  new EngineerImplementation(this);
+        DalApi.IDal dal = DalApi.Factory.Get;
 
-        public IMileStone MileStone =>  new MilestoneImplementation(this);
+        public IEngineer Engineer => new EngineerImplementation();
 
-        public ITask Task =>  new TaskImplementation(this);
+        public ITask Task => new TaskImplementation();
 
-        private static DateTime dateTime = DateTime.Now.Date;
-
-        public DateTime Clock { get { return dateTime; } private set { dateTime = value; } }
-        public void AddDay()
+        public DateTime? StartDate
         {
-            dateTime = dateTime.AddDays(1);
-        }
-        public void AddMonth()
-        {
-            dateTime = dateTime.AddMonths(1);
-        }
-        public void AddYear()
-        {
-            dateTime = dateTime.AddYears(1);
-        }
-        public void ResetClock()
-        {
-            dateTime = DateTime.Now.Date;
+            get { return dal.StartDate; }
+            set { dal.StartDate = value; }
         }
 
-     }
+        /// <summary>
+        /// the end date of the program
+        /// </summary>
+        public DateTime? EndDate
+        {
+            get { return dal.EndDate; }
+            set
+            {
+                if (StartDate is null ||
+                    StartDate > value ||
+                    dal.Task.ReadAll(x => x.StartDate == null ||
+                    (x.StartDate + x.RequiredEffortTime) > value).Any())
+                    throw new Exception();//TODO
+
+                dal.EndDate = value;
+            }
+        }
+
+        public DateTime Clock { 
+            set { dal.Clock = value; }
+            get { return dal.Clock; } }
+    }
 }

@@ -6,12 +6,9 @@ namespace BlApi;
 public interface IBl
 {
     public IEngineer Engineer { get; }
-    public IMileStone MileStone { get; }
     public ITask Task { get; }
-    public DateTime Clock { get; }
-    public void  AddDay();
-    public void AddMonth();
-    public void AddYear();
-    public void ResetClock();
+    public DateTime Clock { get; set; }
+    public DateTime? StartDate { set; get; }
+    public DateTime? EndDate { set; get; }
 
 }

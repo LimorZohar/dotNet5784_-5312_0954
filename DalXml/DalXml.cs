@@ -17,4 +17,21 @@ internal sealed class DalXml : IDal
     public IEngineer Engineer => new EngineerImplementation();
 
     public ITask Task => new TaskImplementation();
+
+    public DateTime Clock { get; set; } = DateTime.Now;
+
+    public DateTime? StartDate
+    {
+        get { return Config.StartDate; }
+        set { Config.StartDate = value; }
+
+    }
+    public DateTime? EndDate
+    {
+        get { return Config.EndDate; }
+        set
+        {
+            Config.EndDate = value;
+        }
+    }
 }

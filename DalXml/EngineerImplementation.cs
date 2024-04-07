@@ -40,6 +40,7 @@ internal class EngineerImplementation : IEngineer
         throw new DalDoesNotExistException("ID dosnt exist");
     }
 
+    public void Reset() => XMLTools.SaveListToXMLSerializer<Engineer>(new List<Engineer>(), s_Engineer_xml);
 
     public Engineer? Read(int id)
     {

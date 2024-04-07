@@ -19,10 +19,19 @@ public static class Initialization
     {
         //s_dal = dal ?? throw new NullReferenceException("DAL object can not be null!"); //stage 2
         s_dal = DalApi.Factory.Get; //stage 4        createEngineers();
+        ResetData();
         createTasks();
         createDependencies();
         createEngineers();
     }
+
+    private static void ResetData()
+    {
+        s_dal!.Engineer.Reset();
+        s_dal.Task.Reset();
+        s_dal.Dependency.Reset();
+    }
+
 
     private static void createEngineers()
     {
@@ -86,7 +95,7 @@ public static class Initialization
 
         // Loop to create 100 tasks
 
-        for (int i = 0; i < 100; i++)
+        for (int i = 0; i < 20; i++)
         {
             string _description = "Task " + (i + 1).ToString();
             string _alias = (i + 1).ToString();
@@ -96,10 +105,12 @@ public static class Initialization
             var nonNullEngineers = myEngineers.Where(e => e != null).ToList();
 
             int currentEngineerId = s_rand.Next(0, nonNullEngineers.Count);
+            TimeSpan time = new(i + 1, i * 5, i * 45);
 
             DO.Task task = new Task
             {
                 Description = _description,
+                RequiredEffortTime = time,
                 Alias = _alias,
                 Complexity = _level,
                 EngineerId = currentEngineerId,
@@ -112,24 +123,48 @@ public static class Initialization
     /// Method to create a set of dependencies
 
     private static void createDependencies()
-
-    {   /// Retrieve a list of all tasks
-        IEnumerable<Task?> myTasks = s_dal!.Task.ReadAll();
-        int maxTask = myTasks.Count(), _dependentTask, _DependsOnTask; ;///Calculate the total number of tasks
-        for (int i = 0; i < 250; i++)
+    {
+        int depend = 0;
+        int dependon = 0;
+        List<Task> tasks = s_dal!.Task.ReadAll().ToList();
+        Dependency dep;
+        HashSet<Dependency> dependencies = new HashSet<Dependency>();
+        for (int i = 5; i < tasks.Count() * 2; i++)
         {
-            //int _ependentTask = myTasks[s_rand.Next(0, maxTask)]!.Id;///Randomly select a dependent task ID
-            //                                                         /// Randomly select a task to depend on
+            switch (i)
+            {
+                case int x when x < 10:
+                    dependon = s_rand.Next(0, 5);
+                    depend = s_rand.Next(5, 11);
+                    dependon = tasks[dependon].Id;
+                    depend = tasks[depend].Id;
+                    break;
 
-            //                                                         /// Create a new dependency object and add it to the data store
-            var nonNullTasks = myTasks.Where(e => e != null).ToList();
-            _dependentTask = nonNullTasks[s_rand.Next(0, nonNullTasks.Count)]!.Id;
-            _DependsOnTask = nonNullTasks[s_rand.Next(0, nonNullTasks.Count)]!.Id;
-            Dependency neWDependency = new(0, _dependentTask, _DependsOnTask);
-            //s_dalDependency!.Create(neWDependency);//stage 1
-            s_dal!.Dependency.Create(neWDependency);//stage 2
+                case int x when x < 20:
+                    dependon = s_rand.Next(5, 11);
+                    depend = s_rand.Next(11, 16);
+                    dependon = tasks[dependon].Id;
+                    depend = tasks[depend].Id;
+                    break;
 
+                case int x when x < 40:
+                    dependon = s_rand.Next(11, 16);
+                    depend = s_rand.Next(16, 20);
+                    dependon = tasks[dependon].Id;
+                    depend = tasks[depend].Id;
+                    break;
+
+                default:
+                    return;
+
+            }
+            dep = new Dependency(
+                    Id: 0,
+                    DependentTask: depend,
+                    DependsOnTask: dependon);
+
+            if (depend != dependon)
+                s_dal.Dependency.Create(dep);
         }
     }
-
 }

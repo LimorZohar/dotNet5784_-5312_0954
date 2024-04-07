@@ -33,7 +33,7 @@ namespace BO
         /// The engineer's expertise level.
         /// </summary>
         public Expertise? Level { get; set; }
-        public object? Task { get;  set; }
+        public TaskInEngineer? Task { get; set; }
 
         // public Roles? Role { get; init; }
         //public TaskInEngineer? Task { get; set; }

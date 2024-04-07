@@ -1,0 +1,89 @@
+﻿<Window x:Class="PL.Task.EditTask"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PL.Task"
+        mc:Ignorable="d"
+        DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
+        Title="EditTask" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Margin="10" DataContext="{Binding Task}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0">
+                <!-- Alias -->
+                <TextBlock Text="Alias:" VerticalAlignment="Center"/>
+                <TextBox Margin="5" Text="{Binding Alias}"/>
+
+                <!-- Description -->
+                <TextBlock Text="Description:" Grid.Row="1" VerticalAlignment="Center"/>
+                <TextBox Margin="5" TextWrapping="Wrap" Text="{Binding Description}"/>
+
+                <!-- Created At Date -->
+                <TextBlock Text="Created At:" Grid.Row="2" VerticalAlignment="Center"/>
+                <DatePicker Margin="5" SelectedDate="{Binding CreatedAtDate}"/>
+
+                <!-- Required Effort Time -->
+                <TextBlock Text="Required Effort Time:" Grid.Row="3" VerticalAlignment="Center"/>
+                <TextBox Margin="5" Text="{Binding RequiredEffortTime}"/>
+
+                <!-- Complexity -->
+                <TextBlock Text="Complexity:" Grid.Row="4" VerticalAlignment="Center"/>
+                <ComboBox Margin="5" SelectedItem="{Binding Complexity}"/>
+
+                <!-- Deliverables -->
+                <TextBlock Text="Deliverables:" Grid.Row="5" VerticalAlignment="Center"/>
+                <TextBox Margin="5" TextWrapping="Wrap" Text="{Binding Deliverables}"/>
+
+                <!-- Remarks -->
+                <TextBlock Text="Remarks:" Grid.Row="6" VerticalAlignment="Center"/>
+                <TextBox Margin="5" TextWrapping="Wrap" Text="{Binding Remarks}"/>
+
+            </StackPanel>
+            
+            <StackPanel Grid.Column="1">
+
+                <!-- Start Date -->
+                <TextBlock Text="Start Date:" Grid.Row="7" VerticalAlignment="Center"/>
+                <DatePicker Margin="5" SelectedDate="{Binding StartDate}"/>
+
+                <!-- Scheduled Date -->
+                <TextBlock Text="Scheduled Date:" Grid.Row="8" VerticalAlignment="Center"/>
+                <DatePicker Margin="5" SelectedDate="{Binding ScheduledDate}"/>
+
+                <!-- Deadline Date -->
+                <TextBlock Text="Deadline Date:" Grid.Row="9" VerticalAlignment="Center"/>
+                <DatePicker Margin="5" SelectedDate="{Binding DeadlineDate}"/>
+
+                <!-- Complete Date -->
+                <TextBlock Text="Complete Date:" Grid.Row="10" VerticalAlignment="Center"/>
+                <DatePicker SelectedDate="{Binding CompleteDate}"/>
+
+                <!-- Forecast Date -->
+                <TextBlock Text="Forecast Date:" Grid.Row="11" VerticalAlignment="Center"/>
+                <DatePicker Grid.Column="1" Margin="5" SelectedDate="{Binding Forecastdate}"/>
+
+                <!-- Engineer -->
+                <TextBlock Text="Engineer:" Grid.Row="12" VerticalAlignment="Center"/>
+                <TextBox Margin="5" Text="{Binding Engineer.Name}"/>
+
+                <!-- Dependencies -->
+                <TextBlock Text="Dependencies:" Grid.Row="13" VerticalAlignment="Center"/>
+
+                <!-- Assuming Dependencies is a collection of TaskInList -->
+                <ListBox Margin="5" ItemsSource="{Binding Dependencies}" DisplayMemberPath="Alias"/>
+            </StackPanel>
+        </Grid>
+
+        <Button Content="Save" HorizontalAlignment="Right" Margin="10" Click="Save_Click" Grid.Row="1"/>
+    </Grid>
+</Window>

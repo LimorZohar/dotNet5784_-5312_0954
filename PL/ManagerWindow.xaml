@@ -11,9 +11,11 @@
             <ImageBrush ImageSource="/background.jpg"/>
         </Grid.Background>
         <StackPanel HorizontalAlignment="Center">
-        <Button Content="Engineer" Width="100" Margin="10,10,0,10" Click="OpenEngineerListWindow"/>
+            <Button Content="Engineer" Width="100" Margin="10,10,0,10" Click="OpenEngineerListWindow"/>
             <Button Content="initDB" Width="100" Margin="10,10,0,10" Click="InitData"/>
             <Button Content="Task" Width="100" Margin="10,10,0,10" Click="OpenTaskListWindow"/>
+            <Button Content="Gantt" Width="100" Margin="10,10,0,10" Click="OpenGanttListWindow"/>
+            <Button Content="Auto Schedule" Width="100" Margin="10,10,0,10" Click="ScheduleTask"/>
         </StackPanel>
     </Grid>
 </Window>

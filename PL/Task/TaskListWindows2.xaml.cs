@@ -1,6 +1,8 @@
 ﻿using BlApi;
+using BO;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
@@ -18,15 +20,15 @@ public partial class TaskListWindows2 : Window
 
     private readonly Array SelectList;
 
-    public IEnumerable<BO.Task> Tasks
+    public ObservableCollection<BO.TaskInList> Tasks
     {
-        get { return (List<BO.Task>)GetValue(TasksDep); }
+        get { return (ObservableCollection<BO.TaskInList>)GetValue(TasksDep); }
         set { SetValue(TasksDep, value); }
     }
 
     // Using a DependencyProperty as the backing store for MyProperty.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty TasksDep =
-        DependencyProperty.Register(nameof(Tasks), typeof(IEnumerable<BO.Task>), typeof(TaskListWindows2));
+        DependencyProperty.Register(nameof(Tasks), typeof(ObservableCollection<BO.TaskInList>), typeof(TaskListWindows2));
 
     public Array Selection
     {
@@ -38,21 +40,35 @@ public partial class TaskListWindows2 : Window
     public static readonly DependencyProperty SelectionDep =
         DependencyProperty.Register(nameof(Selection), typeof(Array), typeof(TaskListWindows2));
 
-   // ICollectionView collectionView { set; get; }
+    // ICollectionView collectionView { set; get; }
     public TaskListWindows2()
     {
         InitializeComponent();
-     
-        Tasks = bl.Task.ReadAll();
+
+        Tasks = new(bl.Task.ReadAll());
         SelectList = Enum.GetValues(typeof(BO.Expertise));
 
         //collectionView = CollectionViewSource.GetDefaultView(Tasks);
         //this.collectionView.GroupDescriptions.Add(new PropertyGroupDescription("Complexity"));
     }
 
+    private void DataChange(BO.Task task, bool addMode)
+    {
+
+    }
+
+
     private void Select(object sender, SelectionChangedEventArgs e)
     {
         BO.TComplexity selected = (BO.TComplexity)((ComboBox)sender).SelectedValue;
-        Tasks = bl.Task.ReadAll(x => x.Complexity == selected);
+        Tasks = new(bl.Task.ReadAll(x => x.Complexity == selected));
+    }
+
+    private void EditTask(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        if (sender is ListView list)
+            new EditTask(DataChange, ((TaskInList)list.SelectedItem).Id).Show();
+        else
+            new EditTask(DataChange).Show();
     }
 }

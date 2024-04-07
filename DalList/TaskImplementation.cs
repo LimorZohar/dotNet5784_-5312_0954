@@ -16,6 +16,7 @@ internal class TaskImplementation : ITask
 
     public void Delete(int id) => Tasks.RemoveAll(x => x!.Id == id);
 
+    public void Reset() => Tasks.Clear();
 
     public Task? Read(Func<Task, bool> filter = null!) => Tasks.FirstOrDefault(x => x!.Equals(filter));
 

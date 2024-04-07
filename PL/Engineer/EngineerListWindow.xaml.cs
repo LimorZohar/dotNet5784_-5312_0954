@@ -64,7 +64,8 @@ public partial class EngineerListWindow : Window
                 engineers = bl.Engineer.ReadAll();
             }
             else
-                new EngineerWindow().Show();
+                new EngineerWindow().ShowDialog();
+            engineers =bl.Engineer.ReadAll();
         }
         catch (Exception ex)
         {

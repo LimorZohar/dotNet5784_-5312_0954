@@ -1,282 +1,319 @@
-﻿namespace BlImplementation
+﻿namespace BlImplementation;
+
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.Security.Cryptography;
+using BlApi;
+using BO;
+using DO;
+
+internal class TaskImplementation : ITask
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using BlApi;
-    using BO;
-    using DO;
+    private DalApi.IDal _dal = DalApi.Factory.Get;
 
-    internal class TaskImplementation : ITask
+
+    public int Create(BO.Task boTask)
     {
-        private DalApi.IDal _dal = DalApi.Factory.Get;
+        Tools.ValidateNonEmptyString(boTask.Alias, nameof(boTask.Alias));
+        Tools.ValidatePositiveId(boTask.Id, nameof(boTask.Id));
 
-        private readonly Bl _bl;
-        internal TaskImplementation(Bl bl) => _bl = bl;
-
-        public int Create(BO.Task boTask)
+        DO.Task doTask = new DO.Task
         {
-            Tools.ValidateNonEmptyString(boTask.Alias, nameof(boTask.Alias));
-            Tools.ValidatePositiveId(boTask.Id, nameof(boTask.Id));
+            Id = boTask.Id,
+            Alias = boTask.Alias,
+            Description = boTask.Description,
+            CreatedAtDate = boTask.CreatedAtDate,
+            RequiredEffortTime = boTask.RequiredEffortTime,
+            IsMilestone = boTask.IsMilestone,
+            Complexity = (DO.TComplexity)boTask.Complexity!,
+            StartDate = boTask.StartDate,
+            ScheduledDate = boTask.ScheduledDate,
+            DeadlineDate = boTask.DeadlineDate,
+            CompleteDate = boTask.CompleteDate,
+            Deliverables = boTask.Deliverables,
+            Remarks = boTask.Remarks,
+            EngineerId = boTask.EngineerId
+        };
 
-            DO.Task doTask = new DO.Task
-            {
-                Id = boTask.Id,
-                Alias = boTask.Alias,
-                Description = boTask.Description,
-                CreatedAtDate = boTask.CreatedAtDate,
-                RequiredEffortTime = boTask.RequiredEffortTime,
-                IsMilestone = boTask.IsMilestone,
-                Complexity = (DO.TComplexity)boTask.Complexity!,
-                StartDate = boTask.StartDate,
-                ScheduledDate = boTask.ScheduledDate,
-                DeadlineDate = boTask.DeadlineDate,
-                CompleteDate = boTask.CompleteDate,
-                Deliverables = boTask.Deliverables,
-                Remarks = boTask.Remarks,
-                EngineerId = boTask.EngineerId
-            };
+        try
+        {
+            var dependenciesToCreate = boTask.Dependencies!
+                .Select(task => new DO.Dependency
+                {
+                    DependentTask = boTask.Id,
+                    DependsOnTask = task.Id
+                })
+                .ToList();
 
-            try
-            {
-                var dependenciesToCreate = boTask.Dependencies!
-                    .Select(task => new DO.Dependency
-                    {
-                        DependentTask = boTask.Id,
-                        DependsOnTask = task.Id
-                    })
-                    .ToList();
+            dependenciesToCreate.ForEach(dependency => _dal.Dependency.Create(dependency));
 
-                dependenciesToCreate.ForEach(dependency => _dal.Dependency.Create(dependency));
+            int key = _dal.Task.Create(doTask);
 
-                int key = _dal.Task.Create(doTask);
-
-                return key;
-            }
-            catch (DO.DalAlreadyExistsException ex)
-            {
-                throw new BlAlreadyExistsException($"Task with ID={boTask.Id} already exists", ex);
-            }
+            return key;
         }
-
-        public BO.Task? Read(int id)
+        catch (DO.DalAlreadyExistsException ex)
         {
-            DO.Task? doTask = _dal.Task.Read(id);
+            throw new BlAlreadyExistsException($"Task with ID={boTask.Id} already exists", ex);
+        }
+    }
 
-            if (doTask == null)
-            {
-                throw new BO.BlDoesNotExistException($"Task with ID={id} does not exist");
-            }
+    public BO.Task? Read(int id)
+    {
+        try
+        {
+            DO.Task task = _dal.Task.Read(id) ?? throw new BlDoesNotExistException("The task does not exist");
 
-            List<TaskInList> tasksList = null!;
-            MileStoneInTask milestone = null!;
+            IEnumerable<DO.Dependency?> dependencies = _dal.Dependency.ReadAll(x => x.DependentTask == id) ?? new List<DO.Dependency>();
 
-            DO.Dependency? checkMileStone = _dal.Dependency.Read(d => d.DependsOnTask == doTask.Id);
-
-            if (checkMileStone != null)
-            {
-                int milestoneId = checkMileStone.DependentTask;
-                DO.Task? milestoneAsATask = _dal.Task.Read(t => t.Id == milestoneId && t.IsMilestone);
-
-                if (milestoneAsATask != null)
-                {
-                    milestone = new MileStoneInTask()
-                    {
-                        Id = milestoneId,
-                        Alias = milestoneAsATask.Alias
-                    };
-                }
-                else
-                {
-                    tasksList = Tools.CalculateList(id)!;
-                }
-            }
-            else
-            {
-                tasksList = Tools.CalculateList(id)!;
-            }
-
-            var engineer = _dal.Engineer.Read(e => e.Id == doTask.EngineerId);
-            EngineerInTask? engineerInTask = engineer != null ?
-                new EngineerInTask() { Id = engineer.Id, Name = engineer.Name } : null;
-
-            BO.Expertise? level = null;
-            if (doTask.Level != null)   
-            {
-                level = (BO.Expertise)doTask.Level;
-            }
-
+            DO.Engineer engineer = _dal.Engineer.Read((int)task.EngineerId!) ?? new();
 
             return new BO.Task()
             {
-                Id = doTask.Id,
-                Alias = doTask.Alias,
-                Description = doTask.Description,
-                CreatedAtDate = doTask.CreatedAtDate,
-                RequiredEffortTime = doTask.RequiredEffortTime,
-                IsMilestone = doTask.IsMilestone,
-                Complexity = (BO.TComplexity)doTask.Complexity,
-                StartDate = doTask.StartDate,
-                DeadlineDate = doTask.DeadlineDate,
-                CompleteDate = doTask.CompleteDate,
-                Deliverables = doTask.Deliverables,
-                Remarks = doTask.Remarks,
-                EngineerId = doTask.EngineerId,
-                Status = Tools.CalculateStatus(doTask.StartDate, doTask.ScheduledDate, doTask.DeadlineDate, doTask.CompleteDate),
+                Id = task.Id,
+                Alias = task.Alias,
+                Description = task.Description,
+                CreatedAtDate = task.CreatedAtDate,
+                RequiredEffortTime = task.RequiredEffortTime,
+                Complexity = (BO.TComplexity)task.Complexity!,
+                Deliverables = task.Deliverables,
+                Remarks = task.Remarks,
+                StartDate = task.StartDate,
+                ScheduledDate = task.ScheduledDate,
+                DeadlineDate = task.StartDate > task.ScheduledDate ? task.StartDate + task.RequiredEffortTime :
+                     task.ScheduledDate + task.RequiredEffortTime,
+                CompleteDate = task.CompleteDate,
+                Engineer = new EngineerInTask()
+                {
+                    Id = engineer.Id,
+                    Name = engineer.Name
+                },
+                Dependencies = (from dep in dependencies
+                                let depTask = _dal.Task.Read(dep.DependsOnTask)
+                                select new BO.TaskInList()
+                                {
+                                    Id = depTask.Id,
+                                    Alias = depTask.Alias,
+                                    Description = depTask.Description,
+                                    Status = GetStatus(depTask)
+                                }).ToList()
             };
-        }
 
-        public void Delete(int id)
+        }
+        catch (DO.DalDoesNotExistException exe)
         {
-            // Validate that the provided ID is a positive number
-            Tools.ValidatePositiveId(id, nameof(id));
-
-            // Read the existing task with the given ID
-            var existingTask = _dal.Task.Read(id);
-
-            // If the task does not exist, throw an exception
-            if (existingTask == null)
-            {
-                throw new BO.BlDoesNotExistException($"Task with ID={id} does not exist");
-            }
-
-            try
-            {
-                // Delete dependencies associated with the task
-                _dal.Dependency.Delete(id);
-
-                // Delete the task itself
-                _dal.Task.Delete(id);
-            }
-            catch (Exception ex)
-            {
-                // Throw a Business Logic Failed to Delete Exception if an error occurs during deletion
-                throw new BO.BlFailedToDelete($"Failed to delete the task with ID={id}", ex);
-            }
+            throw new BO.BlDoesNotExistException($"Task with ID={id} does not exists", exe);//to check
         }
 
-
-
-        public void Update(BO.Task item)
-        {
-            // Validate that the task ID is a positive number
-            Tools.ValidatePositiveNumber(item.Id, nameof(item.Id));
-
-            // Validate that the task alias is a non-empty string
-            Tools.ValidateNonEmptyString(item.Alias, nameof(item.Alias));
-
-            try
-            {
-                // If the task is not a milestone, update its dependencies
-                if (item.Milestone == null)
-                {
-                    // Delete existing dependencies for the task
-                    _dal.Dependency
-                        .ReadAll(d => d.DependentTask == item.Id)
-                        .ToList()
-                        .ForEach(existingDependency => _dal.Dependency.Delete(existingDependency.Id));
-
-                    // Create new dependencies based on the provided Business Object dependencies
-                    item.Dependencies?.ForEach(boDependency =>
-                    {
-                        DO.Dependency doDependency = new DO.Dependency(0, item.Id, boDependency.Id);
-                        int idDependency = _dal.Dependency.Create(doDependency);
-                    });
-                }
-
-                // Create a Data Object representing the updated task
-                DO.Task doTask = new DO.Task(
-                    item.Id,
-                    item.Alias,
-                    item.Description,
-                    item.CreatedAtDate,
-                    item.RequiredEffortTime,
-                    item.IsMilestone,
-                    (DO.TComplexity)item.Complexity!,
-                    item.StartDate,
-                    item.ScheduledDate,
-                    item.DeadlineDate,
-                    item.CompleteDate,
-                    item.Deliverables,
-                    item.Remarks,
-                    item.EngineerId
-                );
-
-                // Update the task in the data storage
-                _dal.Task.Update(doTask);
-            }
-            catch (DO.DalAlreadyExistsException ex)
-            {
-                // Throw a Business Logic Already Exists Exception if the task with the given ID does not exist
-                throw new BlAlreadyExistsException($"Task with ID={item.Id} does not exist", ex);
-            }
-        }
-
-
-        public IEnumerable<BO.Task> ReadAll(Func<BO.Task, bool>? filter = null)
-        {
-            // Check if a filter function is provided, if not, set a default filter to include all items
-            Func<BO.Task, bool>? filter1 = filter != null ? filter! : item => true;
-
-            // Create a list to store the retrieved tasks
-            List<BO.Task>? boTasks = _dal.Task.ReadAll()
-                .Select(doTask =>
-                {
-                    // Initialize variables for tasksList and milestone
-                    List<TaskInList>? tasksList = new List<TaskInList>();
-                    MileStoneInTask? milestone = null;
-
-                    // Check if the task is part of a milestone
-                    DO.Dependency checkMilestone = _dal.Dependency.Read(d => d.DependsOnTask == doTask.Id)!;
-                    if (checkMilestone != null)
-                    {
-                        // If there is a dependency, check if it represents a milestone
-                        int milestoneId = checkMilestone.DependentTask;
-                        DO.Task? milestoneAsATask = _dal.Task.Read(t => t.Id == milestoneId && t.IsMilestone);
-                        milestone = milestoneAsATask != null
-                            ? new MileStoneInTask() { Id = milestoneId, Alias = milestoneAsATask.Alias }
-                            : null;
-                    }
-                    else
-                    {
-                        // If no milestone dependency, calculate tasksList
-                        tasksList = Tools.CalculateList(doTask.Id);
-                    }
-
-                    // Read the engineer associated with the task
-                    var engineer = _dal.Engineer.Read(e => e.Id == doTask.EngineerId);
-                    EngineerInTask? engineerInTask = engineer != null
-                        ? new EngineerInTask() { Id = engineer.Id, Name = engineer.Name }
-                        : null;
-
-                    // Convert the task's experience level
-                    BO.Expertise? level = doTask.Level != null ? (BO.Expertise)doTask.Level : null;
-
-                    // Create a new Business Object Task and add it to the list
-                    return new BO.Task()
-                    {
-                        Id = doTask.Id,
-                        Alias = doTask.Alias,
-                        Description = doTask.Description,
-                        CreatedAtDate = doTask.CreatedAtDate,
-                        RequiredEffortTime = doTask.RequiredEffortTime,
-                        IsMilestone = doTask.IsMilestone,
-                        Complexity = (BO.TComplexity)doTask.Complexity,
-                        StartDate = doTask.StartDate,
-                        DeadlineDate = doTask.DeadlineDate,
-                        CompleteDate = doTask.CompleteDate,
-                        Deliverables = doTask.Deliverables,
-                        Remarks = doTask.Remarks,
-                        EngineerId = doTask.EngineerId,
-                        Status = Tools.CalculateStatus(doTask.StartDate, doTask.ScheduledDate, doTask.DeadlineDate, doTask.CompleteDate),
-                    };
-                })
-                .Where(filter1)
-                .ToList();
-
-            // Return the list of tasks with the option to apply the filter
-            return boTasks;
-        }
 
     }
+
+    public void Delete(int id)
+    {
+        // Validate that the provided ID is a positive number
+        Tools.ValidatePositiveId(id, nameof(id));
+
+        // Read the existing task with the given ID
+        var existingTask = _dal.Task.Read(id);
+
+        // If the task does not exist, throw an exception
+        if (existingTask == null)
+        {
+            throw new BO.BlDoesNotExistException($"Task with ID={id} does not exist");
+        }
+
+        try
+        {
+            // Delete dependencies associated with the task
+            _dal.Dependency.Delete(id);
+
+            // Delete the task itself
+            _dal.Task.Delete(id);
+        }
+        catch (Exception ex)
+        {
+            // Throw a Business Logic Failed to Delete Exception if an error occurs during deletion
+            throw new BO.BlFailedToDelete($"Failed to delete the task with ID={id}", ex);
+        }
+    }
+
+    public void Update(BO.Task item)
+    {
+        // Validate that the task ID is a positive number
+        Tools.ValidatePositiveNumber(item.Id, nameof(item.Id));
+
+        // Validate that the task alias is a non-empty string
+        Tools.ValidateNonEmptyString(item.Alias, nameof(item.Alias));
+
+        try
+        {
+            // If the task is not a milestone, update its dependencies
+            if (item.Milestone == null)
+            {
+                // Delete existing dependencies for the task
+                _dal.Dependency
+                    .ReadAll(d => d.DependentTask == item.Id)
+                    .ToList()
+                    .ForEach(existingDependency => _dal.Dependency.Delete(existingDependency.Id));
+
+                // Create new dependencies based on the provided Business Object dependencies
+                item.Dependencies?.ForEach(boDependency =>
+                {
+                    DO.Dependency doDependency = new DO.Dependency(0, item.Id, boDependency.Id);
+                    int idDependency = _dal.Dependency.Create(doDependency);
+                });
+            }
+
+            // Create a Data Object representing the updated task
+            DO.Task doTask = new DO.Task(
+                item.Id,
+                item.Alias,
+                item.Description,
+                item.CreatedAtDate,
+                item.RequiredEffortTime,
+                item.IsMilestone,
+                (DO.TComplexity)item.Complexity!,
+                item.StartDate,
+                item.ScheduledDate,
+                item.DeadlineDate,
+                item.CompleteDate,
+                item.Deliverables,
+                item.Remarks,
+                item.EngineerId
+            );
+
+            // Update the task in the data storage
+            _dal.Task.Update(doTask);
+        }
+        catch (DO.DalAlreadyExistsException ex)
+        {
+            // Throw a Business Logic Already Exists Exception if the task with the given ID does not exist
+            throw new BlAlreadyExistsException($"Task with ID={item.Id} does not exist", ex);
+        }
+    }
+
+    public IEnumerable<BO.TaskInList> ReadAll(Func<BO.Task, bool>? filter = null)
+    {
+        return from task in _dal.Task.ReadAll()
+               select new TaskInList()
+               {
+                   Id = task.Id,
+                   Alias = task.Alias,
+                   Status = GetStatus(task),
+                   Description = task.Description
+               };
+    }
+
+    public void BuildGantt()
+    {
+        var boTask = from task in _dal.Task.ReadAll()
+                     select Read(task.Id);
+
+        var level1 = boTask.Where(x => x.Dependencies is null);
+        level1.ToList().ForEach(t => Update(t));
+
+    }
+
+    public void ScheduleTasks(DateTime startDate)
+    {
+        Dictionary<int, DO.Task> tasks = _dal.Task.ReadAll().ToList().ToDictionary(task => task.Id);
+        List<Dependency> dependencies = _dal.Dependency.ReadAll().ToList();
+
+
+        // Initialize the schedule with tasks that have no dependencies
+        Dictionary<int, DO.Task> schedule = tasks.Where(task => !dependencies.Any(dep => dep.DependentTask == task.Key)).
+            Select(task => task.Value).ToList().ToDictionary(task => task.Id);
+
+        foreach (int key in schedule.Keys)
+        {
+            DO.Task old = schedule[key];
+            TimeSpan? lenghTask = old.RequiredEffortTime;
+            old = old with { ScheduledDate = startDate, DeadlineDate = startDate + lenghTask };
+            schedule[key] = old;
+        }
+
+        foreach (int task in tasks.Keys)
+        {
+            if (schedule.ContainsKey(task))
+                tasks.Remove(task);
+        }
+
+
+        while (tasks.Count > 0)
+        {
+            foreach (int newTask in tasks.Keys)
+            {
+                bool canSchedule = true;
+
+                foreach (Dependency dep in dependencies.Where(dep => dep.DependentTask == newTask))
+                {
+                    if (!schedule.ContainsKey(dep.DependsOnTask))
+                    {
+                        canSchedule = false;
+                        break;
+                    }
+                }
+
+                if (canSchedule)
+                {
+                    DateTime? earlyStart = DateTime.MinValue;
+                    DateTime? lastDepDate = DateTime.MinValue;
+
+                    foreach (Dependency dep in dependencies.Where(dep => dep.DependentTask == newTask))
+                    {
+                        lastDepDate = schedule[dep.DependsOnTask].DeadlineDate;
+                        if (lastDepDate > earlyStart)
+                            earlyStart = lastDepDate;
+                    }
+                    tasks[newTask] = tasks[newTask] with { ScheduledDate = earlyStart,DeadlineDate = earlyStart + tasks[newTask].RequiredEffortTime};
+
+                    schedule.Add(newTask, tasks[newTask]);
+                    tasks.Remove(newTask);
+                }
+            }
+        }
+
+        schedule.Values.ToList().ForEach(task => { _dal.Task.Update(task); });
+        _dal.StartDate = startDate;
+    }
+
+    public IEnumerable<BO.TaskInGantt> GantList()
+    {
+        return (from task in ReadAll()
+                let t = _dal.Task.Read(task.Id)
+                let start = (int)(t.ScheduledDate - _dal.StartDate)!.Value.TotalHours
+                select new BO.TaskInGantt()
+                {
+                    ID = task.Id,
+                    Name = task.Alias,
+                    TasksDays = (double)t.RequiredEffortTime.Value.TotalHours*10,
+                    StartOffset = start * 10,
+                    EndOffset = (int)(start + t.RequiredEffortTime.Value.TotalHours) * 10,
+                    Dependencies = StringDependencies(task.Id),
+                    Status = task.Status,
+                }).ToList().OrderBy(x => x.StartOffset);
+    }
+
+    private string StringDependencies(int id)
+    {
+        var x = _dal.Dependency.ReadAll(x => x.DependentTask == id)
+                                    .Where(dependency => dependency.DependentTask == id)
+                                    .Select(dependency => dependency.DependsOnTask.ToString() + " ");
+        string dep = "";
+        foreach (string tmp in x)
+        {
+            dep += tmp.ToString();
+        }
+        return dep;
+    }
+
+    private Status GetStatus(DO.Task item)
+    {
+        return item.ScheduledDate is null ? Status.Unscheduled :
+            item.StartDate is null ? Status.Scheduled :
+            item.CompleteDate is null ? Status.OnTrack :
+            Status.Completed;
+    }
+
 }

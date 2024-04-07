@@ -8,30 +8,35 @@
         DataContext="{Binding RelativeSource={RelativeSource Mode=self}}"
 
         Title="MainWindow" Height="450" Width="800">
-    <Grid Margin="0,0,10,-16">
+    <Grid>
        
         <Grid.Background>
             <ImageBrush ImageSource="/background.jpg"/>
         </Grid.Background>
-        <Label x:Name="CurrentTimeLabel" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" FontSize="18" Foreground="WhiteSmoke">
-            <Label.Content>
-                <Binding Path="CurrentTime" StringFormat="{}{0:HH:mm:ss}" />
-            </Label.Content>
-        </Label>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="100"/>
+            <RowDefinition Height="100"/>
+        </Grid.RowDefinitions>
+        <Label Content="ברוכים הבאים למערכת ניהול פרויקטים" Grid.Row="0" HorizontalAlignment="Center"
+               VerticalAlignment="Center" Height="50" FontSize="24" FontWeight="Bold" Foreground="WhiteSmoke"/>
 
-        <Label Content="ברוכים הבאים למערכת ניהול פרויקטים" HorizontalAlignment="Right" Margin="0,10,-164,0" VerticalAlignment="Top" Width="780" Height="50" FontSize="24" FontWeight="Bold" Foreground="WhiteSmoke"/>
-        <Label x:Name="CurrentTime" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" FontSize="18" Foreground="WhiteSmoke"/>
-        <Grid Margin="0,0,10,-16">
-            
-            <Button Content="Add Day" Click="AddDay" HorizontalAlignment="Left" Margin="44,397,0,37" Width="150" />
-            <Button Content="Add Month" Click="AddMonth" HorizontalAlignment="Left" Margin="219,397,0,37" Width="150" />
-            <Button Content="Add Year" Click="AddYear" HorizontalAlignment="Left" Margin="390,397,0,37" Width="150" />
-            <Button Content="Reset Clock" Click="ResetClock" HorizontalAlignment="Left" Margin="563,397,0,37" Width="150" />
-        </Grid>
-        <!-- goes to ManagerWindow-->
-        <Button Content="כניסת מנהל" HorizontalAlignment="Left" Width="190"  Click="Manager_Click" RenderTransformOrigin="0.482,-0.906" Margin="436,166,0,0"/>
-        <!-- goes to EngineerWindow-->
-        <Button Content="כניסת מהנדס" HorizontalAlignment="Left" Width="190" Click="Engineer_Click" RenderTransformOrigin="0.482,-0.906" Margin="124,166,0,0"/>
-       
+
+        <Label Grid.Row="1"  Content="{Binding CurrentTime}"  HorizontalAlignment="Center" VerticalAlignment="Center"
+               FontSize="18" Foreground="WhiteSmoke"/>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button Content="כניסת מנהל" HorizontalAlignment="Left" Width="190"  Click="Manager_Click"  Margin="10"/>
+            <Button Content="כניסת מהנדס" HorizontalAlignment="Left" Width="190" Click="Engineer_Click" Margin="10"/>
+        </StackPanel>   
+        
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" >
+            <Button Content="Add Day" Click="ChangeTime" HorizontalAlignment="Left" Margin="10" Width="150" />
+            <Button Content="Add Month" Click="ChangeTime" HorizontalAlignment="Left" Margin="10" Width="150" />
+            <Button Content="Add Year" Click="ChangeTime" HorizontalAlignment="Left" Margin="10" Width="150" />
+            <Button Content="Reset Clock" Click="ChangeTime" HorizontalAlignment="Left" Margin="10" Width="150" />
+        </StackPanel>
+         
     </Grid>
 </Window>

@@ -1,5 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<config>
-  <NextTaskId>1827</NextTaskId>
-  <NextLinkId>111</NextLinkId>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <NextTaskId>661</NextTaskId>
+  <NextLinkId>1270</NextLinkId>
+  <StartProject xsi:nil="true">כ"ח/ז'/תשפ"ד 16:36:15</StartProject>
+  <EndProject xsi:nil="true" />
 </config>
