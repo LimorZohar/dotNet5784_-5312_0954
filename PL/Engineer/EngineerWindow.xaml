@@ -5,7 +5,7 @@
         xmlns:local="clr-namespace:PL.Engineer"
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
         Title="Engineer Details" 
-        Height="420" Width="300">
+        Height="425" Width="300">
 
 
 
