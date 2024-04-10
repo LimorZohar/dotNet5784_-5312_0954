@@ -34,13 +34,13 @@ public static class Initialization
 
 
     private static void createEngineers()
-    {
+    {   // Variables to store engineer details
         int _id;
         string _name, _email;
         Expertise _level;
 
 
-        // Details for sample engineers
+        // Details for sample engineers 
         (string, string)[] EngineersDetails =
         {
         ("John Doe","john.doe@gmail.com"),
@@ -54,8 +54,7 @@ public static class Initialization
         ("Limor Zohar","Limor.zohar@gmail.com"),
         ("Hadas Donat","Hadas.Daonat@gmail.com")
         };
-        /// Create engineers based on predefined details
-
+        // Loop to create 4 engineers
         for (int i = 0; i < 4; i++)
         {
             foreach (var _details in EngineersDetails)
@@ -93,8 +92,7 @@ public static class Initialization
         IEnumerable<Engineer?> myEngineers = s_dal!.Engineer.ReadAll();
 
 
-        // Loop to create 100 tasks
-
+        // Loop to create 20 tasks with random details
         for (int i = 0; i < 20; i++)
         {
             string _description = "Task " + (i + 1).ToString();
@@ -102,11 +100,13 @@ public static class Initialization
 
             _level = (TComplexity)s_rand.Next((int)TComplexity.Novice, (int)TComplexity.Expert); /// Randomly select an engineer experience level
 
+            // Remove any null values from the list of engineers
             var nonNullEngineers = myEngineers.Where(e => e != null).ToList();
 
+            // Select a random engineer from the list
             int currentEngineerId = s_rand.Next(0, nonNullEngineers.Count);
-            TimeSpan time = new(i + 1, i * 5, i * 45);
-
+            TimeSpan time = new(i + 1, i * 5, i * 45); 
+            // Create a new task object and add it to the data store
             DO.Task task = new Task
             {
                 Description = _description,
@@ -128,18 +128,20 @@ public static class Initialization
         int dependon = 0;
         List<Task> tasks = s_dal!.Task.ReadAll().ToList();
         Dependency dep;
+        // Create a set of dependencies between tasks
         HashSet<Dependency> dependencies = new HashSet<Dependency>();
+
         for (int i = 5; i < tasks.Count() * 2; i++)
         {
             switch (i)
-            {
+            {   // Create dependencies between tasks based on their ID
                 case int x when x < 10:
                     dependon = s_rand.Next(0, 5);
                     depend = s_rand.Next(5, 11);
                     dependon = tasks[dependon].Id;
                     depend = tasks[depend].Id;
                     break;
-
+                
                 case int x when x < 20:
                     dependon = s_rand.Next(5, 11);
                     depend = s_rand.Next(11, 16);

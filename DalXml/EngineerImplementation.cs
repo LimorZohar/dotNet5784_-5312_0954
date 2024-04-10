@@ -37,9 +37,9 @@ internal class EngineerImplementation : IEngineer
                 return;
             }
         }
-        throw new DalDoesNotExistException("ID dosnt exist");
+        throw new DalDoesNotExistException("ID don't exist");
     }
-
+    //reset the list of engineers
     public void Reset() => XMLTools.SaveListToXMLSerializer<Engineer>(new List<Engineer>(), s_Engineer_xml);
 
     public Engineer? Read(int id)

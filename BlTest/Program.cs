@@ -36,7 +36,7 @@ namespace BlTest
                         break;
 
                     case "3":
-                        MilestoneMenu();
+                        //MilestoneMenu();
                         break;
                     case "4":
                         Initialization.Do(); 
@@ -511,108 +511,108 @@ namespace BlTest
       
 
 
-        public static void MilestoneMenu()
-        {
-            int chooseSubMenu;
-            while (true)
-            {
-                Console.WriteLine("EXIT - click 0\r\n" +
-                                  "CREATE - click 1\r\n" +
-                                  "READ - click 2\r\n" +
-                                  "UPDATE - click 3\r\n");
-                chooseSubMenu = int.Parse(Console.ReadLine()!);
+        //public static void MilestoneMenu()
+        //{
+        //    int chooseSubMenu;
+        //    while (true)
+        //    {
+        //        Console.WriteLine("EXIT - click 0\r\n" +
+        //                          "CREATE - click 1\r\n" +
+        //                          "READ - click 2\r\n" +
+        //                          "UPDATE - click 3\r\n");
+        //        chooseSubMenu = int.Parse(Console.ReadLine()!);
 
-                switch (chooseSubMenu)
-                {
-                    case 0:
-                        return;
+        //        switch (chooseSubMenu)
+        //        {
+        //            case 0:
+        //                return;
 
-                    case 1:
-                        // CREATE
-                        try
-                        {
-                            s_bl.MileStone.Create();
+        //            case 1:
+        //                // CREATE
+        //                try
+        //                {
+        //                    s_bl.MileStone.Create();
 
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine($"Error during CREATE: {ex.Message}");
-                        }
-                        break;
+        //                }
+        //                catch (Exception ex)
+        //                {
+        //                    Console.WriteLine($"Error during CREATE: {ex.Message}");
+        //                }
+        //                break;
 
-                    case 2:
-                        int id;
-                        Console.WriteLine("Enter id for reading");
-                        int.TryParse(Console.ReadLine() 
-                            ?? throw new BlInvalidDataException("Enter a number please"), out id);
-                        try
-                        {
-                            if (s_bl.MileStone!.Read(id) is null)
-                                Console.WriteLine("no milestone's task found");
-                            else
-                            {
-                                Console.WriteLine(s_bl.MileStone!.Read(id)!.ToString());
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine($"Error during READ: {ex.Message}");
-                        }
-                        break;
+        //            case 2:
+        //                int id;
+        //                Console.WriteLine("Enter id for reading");
+        //                int.TryParse(Console.ReadLine() 
+        //                    ?? throw new BlInvalidDataException("Enter a number please"), out id);
+        //                try
+        //                {
+        //                    if (s_bl.MileStone!.Read(id) is null)
+        //                        Console.WriteLine("no milestone's task found");
+        //                    else
+        //                    {
+        //                        Console.WriteLine(s_bl.MileStone!.Read(id)!.ToString());
+        //                    }
+        //                }
+        //                catch (Exception ex)
+        //                {
+        //                    Console.WriteLine($"Error during READ: {ex.Message}");
+        //                }
+        //                break;
 
-                    case 3:
-                        // UPDATE
-                        int idMilestoneUpdate;
-                        string milestoneDescriptionUpdate,
-                                milestoneAliasUpdate;
-                        string? milestoneRemarksUpdate;
-                        Console.WriteLine("Enter id for reading milestone");
-                        int.TryParse(Console.ReadLine() ??
-                            throw new BlInvalidDataException("Enter a number please"), out idMilestoneUpdate);
-                        try
-                        {
-                            MileStone updatedMilestone = s_bl.MileStone.Read(idMilestoneUpdate)!;
-                            Console.WriteLine(updatedMilestone.ToString());
-                            Console.WriteLine("Enter description, alias, remarks ");//if null to put the same details
-                            milestoneDescriptionUpdate = Console.ReadLine()!;
-                            if (milestoneDescriptionUpdate == null || milestoneDescriptionUpdate == "")
-                            { milestoneDescriptionUpdate = updatedMilestone.Description!; }
-                            milestoneAliasUpdate = Console.ReadLine()!;
-                            if (milestoneAliasUpdate == null || milestoneAliasUpdate == "")
-                            { milestoneAliasUpdate = updatedMilestone.Alias!; }
-                            milestoneRemarksUpdate = Console.ReadLine();
-                            if (milestoneRemarksUpdate == null || milestoneRemarksUpdate == "")
-                            { milestoneRemarksUpdate = updatedMilestone.Remarks; }
-                            BO.MileStone newMilUpdate = new BO.MileStone()
-                            {
-                                Id = idMilestoneUpdate,
-                                Description = milestoneDescriptionUpdate,
-                                Alias = milestoneAliasUpdate,
-                                CreateAt = s_bl.MileStone.Read(idMilestoneUpdate)!.CreateAt,
-                                Status = s_bl.MileStone.Read(idMilestoneUpdate)!.Status,
-                                ForecastDate = s_bl.MileStone.Read(idMilestoneUpdate)!.ForecastDate,
-                                Deadline = s_bl.MileStone.Read(idMilestoneUpdate)!.Deadline,
-                                Complete = s_bl.MileStone.Read(idMilestoneUpdate)!.Complete,
-                                CompletionPercentage = s_bl.MileStone.Read(idMilestoneUpdate)!.CompletionPercentage,
-                                Remarks = milestoneRemarksUpdate,
-                                Dependencies = s_bl.MileStone.Read(idMilestoneUpdate)!.Dependencies
-                            };
-                            s_bl.MileStone.Update(newMilUpdate);
+        //            case 3:
+        //                // UPDATE
+        //                int idMilestoneUpdate;
+        //                string milestoneDescriptionUpdate,
+        //                        milestoneAliasUpdate;
+        //                string? milestoneRemarksUpdate;
+        //                Console.WriteLine("Enter id for reading milestone");
+        //                int.TryParse(Console.ReadLine() ??
+        //                    throw new BlInvalidDataException("Enter a number please"), out idMilestoneUpdate);
+        //                try
+        //                {
+        //                    MileStone updatedMilestone = s_bl.MileStone.Read(idMilestoneUpdate)!;
+        //                    Console.WriteLine(updatedMilestone.ToString());
+        //                    Console.WriteLine("Enter description, alias, remarks ");//if null to put the same details
+        //                    milestoneDescriptionUpdate = Console.ReadLine()!;
+        //                    if (milestoneDescriptionUpdate == null || milestoneDescriptionUpdate == "")
+        //                    { milestoneDescriptionUpdate = updatedMilestone.Description!; }
+        //                    milestoneAliasUpdate = Console.ReadLine()!;
+        //                    if (milestoneAliasUpdate == null || milestoneAliasUpdate == "")
+        //                    { milestoneAliasUpdate = updatedMilestone.Alias!; }
+        //                    milestoneRemarksUpdate = Console.ReadLine();
+        //                    if (milestoneRemarksUpdate == null || milestoneRemarksUpdate == "")
+        //                    { milestoneRemarksUpdate = updatedMilestone.Remarks; }
+        //                    BO.MileStone newMilUpdate = new BO.MileStone()
+        //                    {
+        //                        Id = idMilestoneUpdate,
+        //                        Description = milestoneDescriptionUpdate,
+        //                        Alias = milestoneAliasUpdate,
+        //                        CreateAt = s_bl.MileStone.Read(idMilestoneUpdate)!.CreateAt,
+        //                        Status = s_bl.MileStone.Read(idMilestoneUpdate)!.Status,
+        //                        ForecastDate = s_bl.MileStone.Read(idMilestoneUpdate)!.ForecastDate,
+        //                        Deadline = s_bl.MileStone.Read(idMilestoneUpdate)!.Deadline,
+        //                        Complete = s_bl.MileStone.Read(idMilestoneUpdate)!.Complete,
+        //                        CompletionPercentage = s_bl.MileStone.Read(idMilestoneUpdate)!.CompletionPercentage,
+        //                        Remarks = milestoneRemarksUpdate,
+        //                        Dependencies = s_bl.MileStone.Read(idMilestoneUpdate)!.Dependencies
+        //                    };
+        //                    s_bl.MileStone.Update(newMilUpdate);
 
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine($"Error during READALL: {ex.Message}");
-                        }
-                        break;
-                    default:
-                        break;
-                }
-            }
+        //                }
+        //                catch (Exception ex)
+        //                {
+        //                    Console.WriteLine($"Error during READALL: {ex.Message}");
+        //                }
+        //                break;
+        //            default:
+        //                break;
+        //        }
+        //    }
         }
 
     }
-}
+
 
 
 

@@ -18,7 +18,7 @@ internal class TaskImplementation : ITask
     {
         Tools.ValidateNonEmptyString(boTask.Alias, nameof(boTask.Alias));
         Tools.ValidatePositiveId(boTask.Id, nameof(boTask.Id));
-
+        //create the task in the data layer 
         DO.Task doTask = new DO.Task
         {
             Id = boTask.Id,
@@ -36,9 +36,9 @@ internal class TaskImplementation : ITask
             Remarks = boTask.Remarks,
             EngineerId = boTask.EngineerId
         };
-
+        //create the dependencies in the data layer
         try
-        {
+        {   
             var dependenciesToCreate = boTask.Dependencies!
                 .Select(task => new DO.Dependency
                 {
@@ -46,7 +46,7 @@ internal class TaskImplementation : ITask
                     DependsOnTask = task.Id
                 })
                 .ToList();
-
+            
             dependenciesToCreate.ForEach(dependency => _dal.Dependency.Create(dependency));
 
             int key = _dal.Task.Create(doTask);
@@ -58,7 +58,7 @@ internal class TaskImplementation : ITask
             throw new BlAlreadyExistsException($"Task with ID={boTask.Id} already exists", ex);
         }
     }
-
+    //read the task with the same id 
     public BO.Task? Read(int id)
     {
         try
@@ -68,7 +68,7 @@ internal class TaskImplementation : ITask
             IEnumerable<DO.Dependency?> dependencies = _dal.Dependency.ReadAll(x => x.DependentTask == id) ?? new List<DO.Dependency>();
 
             DO.Engineer engineer = _dal.Engineer.Read((int)task.EngineerId!) ?? new();
-
+            //return the task with the same id
             return new BO.Task()
             {
                 Id = task.Id,
@@ -108,7 +108,7 @@ internal class TaskImplementation : ITask
 
 
     }
-
+    //delete the task with the same id
     public void Delete(int id)
     {
         // Validate that the provided ID is a positive number

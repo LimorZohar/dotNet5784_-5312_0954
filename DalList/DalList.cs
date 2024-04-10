@@ -6,10 +6,14 @@ using System.Threading.Tasks;
 
 namespace Dal;
 using DalApi;
+//singleton class that implements the IDal interface
+//the class is sealed so it cannot be inherited
+//the class is internal so it cannot be accessed from outside the assembly
 sealed internal class DalList : IDal
-{
+{   // singleton so the constructor is private and the only instance is created here and is public
     public static IDal Instance { get; } = new DalList();
 
+    // private constructor so the class cannot be instantiated from outside
     private DalList() { }
     public IDependency Dependency => new DependnecyImplementation();
 

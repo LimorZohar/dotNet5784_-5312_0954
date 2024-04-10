@@ -21,7 +21,7 @@ using System;
 namespace DO
 {
     public record Task
-    (
+    (   // properties
         int Id,
         string? Alias = null,
         string? Description = null,
@@ -41,7 +41,7 @@ namespace DO
         public Task() : this(Id: 0) { CreatedAtDate = DateTime.Now; }
 
         /// <summary>
-        /// RegistrationDate - registration date of the current student record
+        /// RegistrationDate - registration date of the current Task record
         /// </summary>
         public DateTime RegistrationDate => DateTime.Now; // get-only property with a corrected name
 

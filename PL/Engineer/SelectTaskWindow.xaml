@@ -7,8 +7,12 @@
         mc:Ignorable="d"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
         Title="SelectTaskWindow" Height="450" Width="800">
-    <Grid>
-        <ListView ItemsSource="{Binding TasksList}" MouseDoubleClick="SelectTask"/>
+    <Border Background="AntiqueWhite" >
+
+        <Grid>
+            <TextBlock Text="Select Task:" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="25" FontWeight="UltraBold" Margin="10,10,0,0"/>
+            <ListView ItemsSource="{Binding TasksList}" MouseDoubleClick="SelectTask" Margin="40,60,40,40" FontWeight="Bold"/>
 
     </Grid>
+        </Border>
 </Window>

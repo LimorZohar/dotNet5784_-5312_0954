@@ -1,16 +1,12 @@
-﻿
-
-namespace BlImplementation;
+﻿namespace BlImplementation;
 using BlApi;
 using BO;
 using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
 
-
-
 internal class EngineerImplementation : IEngineer
-{
+{   
     private DalApi.IDal _dal = DalApi.Factory.Get;
 
     //    private readonly Bl _bl;
@@ -18,20 +14,21 @@ internal class EngineerImplementation : IEngineer
     public int Create(BO.Engineer boEngineer)// Create a engineer in do to bo
     {
         try
-        {
+        {   // Validate the data
             Tools.ValidatePositiveId(boEngineer.Id, nameof(boEngineer.Id));
             Tools.ValidateNonEmptyString(boEngineer.Name, nameof(boEngineer.Name));
             Tools.ValidateEmail(boEngineer.Email, nameof(boEngineer.Email));
             Tools.ValidatePositiveNumber(boEngineer.Cost, nameof(boEngineer.Cost));
 
-
+            //create the engineer in the data layer
             DO.Engineer doEngineer = new DO.Engineer
                 (boEngineer.Id, boEngineer.Email, boEngineer.Cost
                 , boEngineer.Name, (DO.Expertise)boEngineer.Level!);
-
+            //return the id of the engineer
             int idEng = _dal.Engineer.Create(doEngineer);
             return idEng;
         }
+        //if the engineer already exists throw exception that the engineer already exists from the data layer
         catch (DO.DalAlreadyExistsException ex)
         {
             throw new BO.BlAlreadyExistsException($"Engineer with ID={boEngineer.Id} already exists", ex);
@@ -42,7 +39,7 @@ internal class EngineerImplementation : IEngineer
 
     public BO.Engineer? Read(int id)//looking for engineer with the same id
     {
-
+        
         DO.Engineer? doEngineer = _dal.Engineer.Read(id);
         if (doEngineer == null)
             throw new BO.BlDoesNotExistException($"Engineer with ID={id} does Not exist");
@@ -72,7 +69,7 @@ internal class EngineerImplementation : IEngineer
         }
     }
 
-
+    //read all the engineers in the data layer and return them in the business layer 
     public IEnumerable<Engineer> ReadAll(Func<Engineer, bool>? filter = null)
     {
         var engineers = from DO.Engineer doEngineer in _dal.Engineer.ReadAll()
@@ -85,11 +82,11 @@ internal class EngineerImplementation : IEngineer
                             Level = (Expertise)(doEngineer.Level!)
                         }
                         select boEngineer;
-
+        //return the engineers that the filter is true
         return filter != null ? engineers.Where(filter) : engineers;
     }
 
-
+    //update the engineer in the data layer 
     public void Update(Engineer boEngineer)
     {
         // Validate the data
@@ -103,7 +100,6 @@ internal class EngineerImplementation : IEngineer
         {
             throw new BO.BlInvalidDataException("Invalid Engineer level. Must be above Junior.");
         }
-
 
         // Update in the data layer
         try
@@ -122,7 +118,7 @@ internal class EngineerImplementation : IEngineer
 
             if(boEngineer.Task is not null && boEngineer.Task.Id != 0)
             {
-                DO.Task t = _dal.Task.Read(boEngineer.Task.Id) ?? throw new BlDoesNotExistException("the task dont exist");
+                DO.Task t = _dal.Task.Read(boEngineer.Task.Id) ?? throw new BlDoesNotExistException("the task don't exist");
                 _dal.Task.Update(t with { EngineerId = boEngineer.Id });
             }
 

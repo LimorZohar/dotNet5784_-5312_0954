@@ -26,7 +26,7 @@
                                                IsEnabled="False"
                                                Width="{Binding StartOffset}"
                                                Height="20"
-                                               Fill="White"/>
+                                               Fill="LightBlue"/>
                                     <Rectangle
                                                Width="{Binding TasksDays}"
                                                Height="20"

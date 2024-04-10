@@ -25,10 +25,10 @@ namespace BlImplementation
         /// the end date of the program
         /// </summary>
         public DateTime? EndDate
-        {
+        {   
             get { return dal.EndDate; }
             set
-            {
+            {   
                 if (StartDate is null ||
                     StartDate > value ||
                     dal.Task.ReadAll(x => x.StartDate == null ||

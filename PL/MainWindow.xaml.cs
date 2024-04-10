@@ -63,9 +63,13 @@ public partial class MainWindow : Window
 
     private void Engineer_Click(object sender, RoutedEventArgs e)
     {
-        int userInput = int.Parse(Microsoft.VisualBasic.Interaction.InputBox("Please enter your Id:", "Enter Id", ""));
-        try { bl.Engineer.Read(userInput); }
-        catch (Exception ex) { MessageBox.Show(ex.Message);}
+        try
+        {
+            int userInput = int.Parse(Microsoft.VisualBasic.Interaction.InputBox("Please enter your Id:", "Enter Id", ""));
+            bl.Engineer.Read(userInput);
+            new EngineerWindow(userInput).Show();
+        } 
+        catch (Exception ex) { MessageBox.Show("תעודת זהות שגויה, נסה שוב");}
         // בדיקה אם המשתמש הזין ערך ולא עזב אותו ריק
         //if (bl.Engineer.Read(userInput) is not null)
         //{

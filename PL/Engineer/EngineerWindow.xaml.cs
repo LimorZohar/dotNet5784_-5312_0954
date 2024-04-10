@@ -32,6 +32,7 @@ public partial class EngineerWindow : Window
     public EngineerWindow(int id = 0)
     {
         _id = id;
+        // addMode is true if id is 0
         addMode = id == 0;
         InitializeComponent();
         try
@@ -53,7 +54,7 @@ public partial class EngineerWindow : Window
             else
                 bl.Engineer.Update(Engineer);
 
-            MessageBox.Show("succseful");
+            MessageBox.Show("נשמר");
             this.Close();
         }
         catch (Exception ex) { MessageBox.Show(ex.Message); }
